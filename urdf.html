@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>URDF Viewer — ros3djs style</title>
+  <title>My Robot URDF Viewer</title>
 
-  <!-- Import map: resolve bare "three" imports on GitHub Pages -->
+  <!-- Import map so GitHub Pages resolves bare "three" imports -->
   <script type="importmap">
   {
     "imports": {
@@ -25,7 +25,6 @@
       font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial
     }
     .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
     .btn{padding:8px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
     .btn:active{transform:translateY(1px)}
     .muted{color:#6b7280}
@@ -42,7 +41,7 @@
     <div class="row" style="justify-content:space-between">
       <div>
         <strong>URDF Viewer</strong>
-        <span class="muted"> · autoloads <span class="code">assets/robot.urdf</span></span>
+        <span class="muted"> · autoloads <span class="code">robot.urdf</span></span>
         <span id="status" class="muted"></span>
       </div>
       <div class="row">
@@ -50,28 +49,19 @@
         <button class="btn" id="front">Front</button>
         <button class="btn" id="side">Side</button>
         <button class="btn" id="top">Top</button>
-        <label class="pill"><input id="axis" type="checkbox" checked> Axis</label>
-        <label class="pill"><input id="wire" type="checkbox"> Wireframe</label>
         <span id="err"></span>
       </div>
     </div>
-
-    <div class="row" style="margin-top:8px">
-      <button class="btn" id="play">▶ Play</button>
-      <button class="btn" id="pause">⏸ Pause</button>
-      <button class="btn" id="stop">⏹ Stop</button>
-      <span class="muted">Trajectory file (optional):</span>
-      <input type="text" id="trajPath" value="assets/trajectory.json" style="min-width:280px">
-      <button class="btn" id="loadTraj">Load Trajectory</button>
-    </div>
-
     <div id="sliders"></div>
+    <p class="muted" style="margin-top:8px;font-size:12px">
+      Acknowledgement: adapted with reference to
+      <a href="https://wiki.ros.org/ros3djs/Tutorials/VisualizingAURDF" target="_blank">ros3djs “Visualizing a URDF” tutorial</a>.
+    </p>
   </div>
 
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-    // URDFLoader from upstream repo (ESM)
     import URDFLoader from 'https://cdn.jsdelivr.net/gh/gkjohnson/urdf-loaders@master/javascript/URDFLoader.js';
 
     // --- Three.js Scene ---
@@ -84,11 +74,7 @@
 
     const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.9);
     const dir  = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(5,5,5);
-    scene.add(hemi, dir);
-
-    const grid = new THREE.GridHelper(10, 20, 0x888888, 0xdddddd);
-    const axisHelper = new THREE.AxesHelper(0.25);
-    scene.add(grid, axisHelper);
+    scene.add(hemi, dir, new THREE.GridHelper(10, 20, 0x888888, 0xdddddd), new THREE.AxesHelper(0.25));
 
     function onResize(){
       const w = innerWidth, h = innerHeight;
@@ -97,11 +83,10 @@
     addEventListener('resize', onResize); onResize();
 
     // Camera presets
-    document.getElementById('reset').onclick = () => frameFit(robot || grid);
+    document.getElementById('reset').onclick = () => frameFit(robot || scene);
     document.getElementById('front').onclick = () => setCamDir(new THREE.Vector3( 0, 0, 1));
     document.getElementById('side').onclick  = () => setCamDir(new THREE.Vector3( 1, 0, 0));
     document.getElementById('top').onclick   = () => setCamDir(new THREE.Vector3( 0, 1, 0));
-    document.getElementById('axis').onchange = e => axisHelper.visible = e.target.checked;
 
     function setCamDir(dirVec){
       const tgt = controls.target.clone();
@@ -115,12 +100,9 @@
 
     // --- URDF loader setup ---
     const loader = new URDFLoader();
-    // Map package:// URIs to /assets/ (adjust if your meshes live elsewhere)
-    loader.packages = { '': 'assets/' };
+    loader.packages = { '': '' }; // map package:// to current folder
 
     let robot = null;
-    let originalMaterials = new Map();
-
     const errEl = (m)=> document.getElementById('err').textContent = m || '';
     const statusEl = (m)=> document.getElementById('status').textContent = m ? ' · ' + m : '';
 
@@ -136,7 +118,6 @@
     function buildSliders(){
       const wrap = document.getElementById('sliders'); wrap.innerHTML = '';
       if (!robot || !robot.joints) return;
-
       Object.entries(robot.joints).forEach(([name, j])=>{
         if (!['revolute','continuous','prismatic'].includes(j.type)) return;
         const row = document.createElement('div'); row.className = 'joint';
@@ -150,34 +131,15 @@
         input.value = j.angle || 0;
         input.oninput = e => {
           const v = parseFloat(e.target.value);
-          (prism ? j.setPosition(v) : j.setJointValue(v));
+          prism ? j.setPosition(v) : j.setJointValue(v);
         };
         row.appendChild(label); row.appendChild(input); wrap.appendChild(row);
       });
     }
 
-    // Wireframe toggle
-    document.getElementById('wire').onchange = e => {
-      const on = e.target.checked;
-      if (!robot) return;
-      robot.traverse(obj=>{
-        if (obj.isMesh) {
-          if (on) {
-            if (!originalMaterials.has(obj)) originalMaterials.set(obj, obj.material);
-            obj.material = obj.material.clone();
-            obj.material.wireframe = true;
-          } else if (originalMaterials.has(obj)) {
-            obj.material = originalMaterials.get(obj);
-            originalMaterials.delete(obj);
-          }
-        }
-      });
-    };
-
-    // Load URDF (directly; your file uses primitives so no extra loaders needed)
-    function loadURDF(path='assets/robot.urdf'){
+    function loadURDF(path='robot.urdf'){
       errEl(''); statusEl('loading…');
-      if (robot) { scene.remove(robot); robot = null; originalMaterials.clear(); }
+      if (robot) { scene.remove(robot); robot = null; }
       loader.load(
         path,
         r => { robot = r; scene.add(robot); frameFit(robot); buildSliders(); statusEl('loaded'); },
@@ -186,69 +148,11 @@
       );
     }
 
-    // --- Simple trajectory player (optional JSON) ---
-    // JSON format: [{"t":0.0, "js_1_2":0.0, "js_6_7":0.3, ...}, {"t":0.1, ...}, ...]
-    let traj = null, t0 = 0, playing = false, paused = false, pauseTime = 0;
-
-    document.getElementById('loadTraj').onclick = async () => {
-      try {
-        const p = document.getElementById('trajPath').value.trim();
-        const res = await fetch(p, { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP '+res.status);
-        traj = await res.json();
-        statusEl(`trajectory loaded (${traj.length} frames)`);
-      } catch (e) {
-        errEl('Trajectory load error: ' + (e?.message || e));
-      }
-    };
-    document.getElementById('play').onclick = () => { if (traj) { playing = true; paused = false; t0 = performance.now()/1000 - (paused ? (pauseTime - t0) : 0); } };
-    document.getElementById('pause').onclick = () => { if (playing) { paused = true; pauseTime = performance.now()/1000; } };
-    document.getElementById('stop').onclick = () => { playing = false; paused = false; };
-
-    function applyFrame(frame){
-      if (!robot || !frame) return;
-      for (const [k,v] of Object.entries(frame)){
-        if (k === 't') continue;
-        const j = robot.joints[k];
-        if (!j) continue;
-        if (j.type === 'prismatic') j.setPosition(v);
-        else j.setJointValue(v);
-      }
-    }
-
-    function sampleTraj(time){
-      if (!traj || traj.length === 0) return null;
-      if (time <= traj[0].t) return traj[0];
-      if (time >= traj[traj.length-1].t) return traj[traj.length-1];
-      // linear interpolate
-      let i = 1;
-      while (i < traj.length && traj[i].t < time) i++;
-      const a = traj[i-1], b = traj[i];
-      const alpha = (time - a.t) / (b.t - a.t);
-      const out = { t: time };
-      const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
-      keys.forEach(k=>{
-        if (k === 't') return;
-        const av = a[k] ?? 0, bv = b[k] ?? 0;
-        out[k] = av + (bv - av) * alpha;
-      });
-      return out;
-    }
-
     // --- Run ---
-    loadURDF('assets/robot.urdf');
+    loadURDF('robot.urdf');
 
     (function animate(){
       requestAnimationFrame(animate);
-
-      if (playing && !paused && traj){
-        const now = performance.now()/1000;
-        const t = now - t0;
-        const f = sampleTraj(t);
-        applyFrame(f);
-        if (t >= traj[traj.length-1].t) { playing = false; }
-      }
-
       renderer.render(scene, camera);
     })();
   </script>
