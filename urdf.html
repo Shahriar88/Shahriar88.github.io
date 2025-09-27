@@ -3,23 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>URDF Viewer</title>
-  <style>
-    html,body{height:100%;margin:0}
-    #viewport{position:fixed;inset:0}
-    #ui{
-      position:fixed;top:12px;left:12px;right:12px;max-width:660px;
-      background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
-      padding:16px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial
-    }
-    .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid #e5e7eb;border-radius:14px;background:#fff}
-    .code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; padding:.15rem .4rem; border-radius:.4rem; background:#f3f4f6}
-    #err{margin-top:10px;color:#b00020;font-size:12px;white-space:pre-wrap}
-  </style>
+  <title>URDF Viewer — ros3djs style</title>
 
-  <!-- Import map so bare imports work on GitHub Pages -->
+  <!-- Import map: resolve bare "three" imports on GitHub Pages -->
   <script type="importmap">
   {
     "imports": {
@@ -28,78 +14,115 @@
     }
   }
   </script>
+
+  <style>
+    html,body{height:100%;margin:0}
+    #view{position:fixed;inset:0}
+    #ui{
+      position:fixed;top:10px;left:10px;right:10px;max-width:900px;
+      background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
+      padding:12px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.18);
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial
+    }
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+    .btn{padding:8px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
+    .btn:active{transform:translateY(1px)}
+    .muted{color:#6b7280}
+    .code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; padding:.15rem .4rem; border-radius:.4rem; background:#f3f4f6}
+    #sliders{max-height:34vh;overflow:auto;margin-top:8px;border-top:1px dashed #e5e7eb;padding-top:8px}
+    .joint{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:6px 0}
+    #err{color:#b00020;font-size:12px;white-space:pre-wrap;margin-left:8px}
+  </style>
 </head>
 <body>
-  <canvas id="viewport"></canvas>
+  <canvas id="view"></canvas>
+
   <div id="ui">
-    <div class="row" style="margin-bottom:10px">
-      <h2 style="margin:0">URDF Viewer</h2>
-      <div style="margin-left:auto">Auto-loading: <span class="code">assets/robot.urdf</span></div>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <strong>URDF Viewer</strong>
+        <span class="muted"> · autoloads <span class="code">assets/robot.urdf</span></span>
+        <span id="status" class="muted"></span>
+      </div>
+      <div class="row">
+        <button class="btn" id="reset">Reset</button>
+        <button class="btn" id="front">Front</button>
+        <button class="btn" id="side">Side</button>
+        <button class="btn" id="top">Top</button>
+        <label class="pill"><input id="axis" type="checkbox" checked> Axis</label>
+        <label class="pill"><input id="wire" type="checkbox"> Wireframe</label>
+        <span id="err"></span>
+      </div>
     </div>
-    <div class="row">
-      <button id="reset" class="pill">Reset view</button>
-      <label class="pill"><input id="axis" type="checkbox" checked> Axis helper</label>
-      <label class="pill"><input id="wire" type="checkbox" checked> Wireframe</label>
+
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="play">▶ Play</button>
+      <button class="btn" id="pause">⏸ Pause</button>
+      <button class="btn" id="stop">⏹ Stop</button>
+      <span class="muted">Trajectory file (optional):</span>
+      <input type="text" id="trajPath" value="assets/trajectory.json" style="min-width:280px">
+      <button class="btn" id="loadTraj">Load Trajectory</button>
     </div>
-    <div id="err"></div>
+
+    <div id="sliders"></div>
   </div>
 
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-    // URDFLoader from the upstream repo via jsDelivr (works on GH Pages)
+    // URDFLoader from upstream repo (ESM)
     import URDFLoader from 'https://cdn.jsdelivr.net/gh/gkjohnson/urdf-loaders@master/javascript/URDFLoader.js';
 
-    // --- Three.js scene ---
-    const canvas = document.getElementById('viewport');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    // --- Three.js Scene ---
+    const canvas = document.getElementById('view');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
     const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf6f7fb);
-    const camera = new THREE.PerspectiveCamera(45, 2, 0.01, 1000); camera.position.set(2.5,1.5,3.5);
+    const camera = new THREE.PerspectiveCamera(45, 2, 0.01, 1000); camera.position.set(2.5, 1.6, 3.5);
     const controls = new OrbitControls(camera, renderer.domElement); controls.target.set(0,0.5,0); controls.update();
 
     const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.9);
-    const dir  = new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(5,5,5);
+    const dir  = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(5,5,5);
     scene.add(hemi, dir);
 
     const grid = new THREE.GridHelper(10, 20, 0x888888, 0xdddddd);
-    scene.add(grid);
-
     const axisHelper = new THREE.AxesHelper(0.25);
-    scene.add(axisHelper);
+    scene.add(grid, axisHelper);
 
     function onResize(){
       const w = innerWidth, h = innerHeight;
-      renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix();
     }
     addEventListener('resize', onResize); onResize();
 
-    // Toggle helpers
+    // Camera presets
+    document.getElementById('reset').onclick = () => frameFit(robot || grid);
+    document.getElementById('front').onclick = () => setCamDir(new THREE.Vector3( 0, 0, 1));
+    document.getElementById('side').onclick  = () => setCamDir(new THREE.Vector3( 1, 0, 0));
+    document.getElementById('top').onclick   = () => setCamDir(new THREE.Vector3( 0, 1, 0));
     document.getElementById('axis').onchange = e => axisHelper.visible = e.target.checked;
-    let wireframeMat = new THREE.MeshStandardMaterial({ color: 0x9aa3b2, metalness:0.05, roughness:0.8, wireframe:true });
-    document.getElementById('wire').onchange = e => setWireframe(e.target.checked);
 
-    // --- URDF loader ---
+    function setCamDir(dirVec){
+      const tgt = controls.target.clone();
+      const dist = camera.position.distanceTo(tgt);
+      const off  = dirVec.clone().normalize().multiplyScalar(dist);
+      camera.position.copy(tgt).add(off);
+      camera.up.set(0,1,0);
+      camera.lookAt(tgt);
+      controls.update();
+    }
+
+    // --- URDF loader setup ---
     const loader = new URDFLoader();
-    // If your URDF uses "package://", map it like this:
+    // Map package:// URIs to /assets/ (adjust if your meshes live elsewhere)
     loader.packages = { '': 'assets/' };
 
-    let robot;
-    function setWireframe(on){
-      if (!robot) return;
-      robot.traverse(obj=>{
-        if (obj.isMesh) {
-          if (on) {
-            // clone to avoid mutating shared materials
-            obj.userData._origMat = obj.material;
-            obj.material = wireframeMat;
-          } else if (obj.userData._origMat) {
-            obj.material = obj.userData._origMat;
-            delete obj.userData._origMat;
-          }
-        }
-      });
-    }
+    let robot = null;
+    let originalMaterials = new Map();
+
+    const errEl = (m)=> document.getElementById('err').textContent = m || '';
+    const statusEl = (m)=> document.getElementById('status').textContent = m ? ' · ' + m : '';
 
     function frameFit(obj){
       const box = new THREE.Box3().setFromObject(obj);
@@ -110,27 +133,124 @@
       camera.lookAt(c);
     }
 
-    const showErr = (m)=> document.getElementById('err').textContent = m || '';
+    function buildSliders(){
+      const wrap = document.getElementById('sliders'); wrap.innerHTML = '';
+      if (!robot || !robot.joints) return;
 
-    function loadURDF(path){
-      showErr('');
-      if (robot) { scene.remove(robot); robot = null; }
+      Object.entries(robot.joints).forEach(([name, j])=>{
+        if (!['revolute','continuous','prismatic'].includes(j.type)) return;
+        const row = document.createElement('div'); row.className = 'joint';
+        const label = document.createElement('label'); label.textContent = `${name} (${j.type})`;
+        const input = document.createElement('input'); input.type='range';
+        const lim = j.limits || { lower: -Math.PI, upper: Math.PI };
+        const prism = j.type === 'prismatic';
+        input.min  = prism ? (lim.lower ?? -0.1) : (lim.lower ?? -Math.PI);
+        input.max  = prism ? (lim.upper ??  0.1) : (lim.upper ??  Math.PI);
+        input.step = prism ? 0.001 : 0.01;
+        input.value = j.angle || 0;
+        input.oninput = e => {
+          const v = parseFloat(e.target.value);
+          (prism ? j.setPosition(v) : j.setJointValue(v));
+        };
+        row.appendChild(label); row.appendChild(input); wrap.appendChild(row);
+      });
+    }
 
-      // You can also prefetch & sanitize here if needed; for your URDF it’s fine to load directly:
+    // Wireframe toggle
+    document.getElementById('wire').onchange = e => {
+      const on = e.target.checked;
+      if (!robot) return;
+      robot.traverse(obj=>{
+        if (obj.isMesh) {
+          if (on) {
+            if (!originalMaterials.has(obj)) originalMaterials.set(obj, obj.material);
+            obj.material = obj.material.clone();
+            obj.material.wireframe = true;
+          } else if (originalMaterials.has(obj)) {
+            obj.material = originalMaterials.get(obj);
+            originalMaterials.delete(obj);
+          }
+        }
+      });
+    };
+
+    // Load URDF (directly; your file uses primitives so no extra loaders needed)
+    function loadURDF(path='assets/robot.urdf'){
+      errEl(''); statusEl('loading…');
+      if (robot) { scene.remove(robot); robot = null; originalMaterials.clear(); }
       loader.load(
         path,
-        r => { robot = r; scene.add(robot); frameFit(robot); setWireframe(document.getElementById('wire').checked); },
+        r => { robot = r; scene.add(robot); frameFit(robot); buildSliders(); statusEl('loaded'); },
         undefined,
-        e => showErr(`Failed to load ${path}: ${e?.message || e}`)
+        e => { errEl(`Failed to load ${path}: ${e?.message || e}`); statusEl(''); }
       );
     }
 
-    document.getElementById('reset').onclick = () => frameFit(robot || grid);
+    // --- Simple trajectory player (optional JSON) ---
+    // JSON format: [{"t":0.0, "js_1_2":0.0, "js_6_7":0.3, ...}, {"t":0.1, ...}, ...]
+    let traj = null, t0 = 0, playing = false, paused = false, pauseTime = 0;
 
-    // Auto-load your file
+    document.getElementById('loadTraj').onclick = async () => {
+      try {
+        const p = document.getElementById('trajPath').value.trim();
+        const res = await fetch(p, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        traj = await res.json();
+        statusEl(`trajectory loaded (${traj.length} frames)`);
+      } catch (e) {
+        errEl('Trajectory load error: ' + (e?.message || e));
+      }
+    };
+    document.getElementById('play').onclick = () => { if (traj) { playing = true; paused = false; t0 = performance.now()/1000 - (paused ? (pauseTime - t0) : 0); } };
+    document.getElementById('pause').onclick = () => { if (playing) { paused = true; pauseTime = performance.now()/1000; } };
+    document.getElementById('stop').onclick = () => { playing = false; paused = false; };
+
+    function applyFrame(frame){
+      if (!robot || !frame) return;
+      for (const [k,v] of Object.entries(frame)){
+        if (k === 't') continue;
+        const j = robot.joints[k];
+        if (!j) continue;
+        if (j.type === 'prismatic') j.setPosition(v);
+        else j.setJointValue(v);
+      }
+    }
+
+    function sampleTraj(time){
+      if (!traj || traj.length === 0) return null;
+      if (time <= traj[0].t) return traj[0];
+      if (time >= traj[traj.length-1].t) return traj[traj.length-1];
+      // linear interpolate
+      let i = 1;
+      while (i < traj.length && traj[i].t < time) i++;
+      const a = traj[i-1], b = traj[i];
+      const alpha = (time - a.t) / (b.t - a.t);
+      const out = { t: time };
+      const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+      keys.forEach(k=>{
+        if (k === 't') return;
+        const av = a[k] ?? 0, bv = b[k] ?? 0;
+        out[k] = av + (bv - av) * alpha;
+      });
+      return out;
+    }
+
+    // --- Run ---
     loadURDF('assets/robot.urdf');
 
-    (function animate(){ requestAnimationFrame(animate); renderer.render(scene, camera); })();
+    (function animate(){
+      requestAnimationFrame(animate);
+
+      if (playing && !paused && traj){
+        const now = performance.now()/1000;
+        const t = now - t0;
+        const f = sampleTraj(t);
+        applyFrame(f);
+        if (t >= traj[traj.length-1].t) { playing = false; }
+      }
+
+      renderer.render(scene, camera);
+    })();
   </script>
 </body>
 </html>
