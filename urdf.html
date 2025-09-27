@@ -1,160 +1,59 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Robot URDF Viewer</title>
+<meta charset="utf-8" />
 
-  <!-- Import map so GitHub Pages resolves bare "three" imports -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
-      "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.159.0/examples/jsm/controls/OrbitControls.js"
-    }
+<script src="http://static.robotwebtools.org/threejs/current/three.min.js"></script>
+<script src="http://static.robotwebtools.org/threejs/current/ColladaLoader.min.js"></script>
+<script src="http://static.robotwebtools.org/ColladaAnimationCompress/current/ColladaLoader2.min.js"></script>
+<script src="http://static.robotwebtools.org/threejs/current/STLLoader.min.js"></script>
+<script src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<script src="http://static.robotwebtools.org/ros3djs/current/ros3d.min.js"></script>
+
+<script>
+  /**
+   * Setup all visualization elements when the page is loaded.
+   */
+  function init() {
+    // Connect to ROS.
+    var ros = new ROSLIB.Ros({
+      url : 'ws://localhost:9090'
+    });
+
+    // Create the main viewer.
+    var viewer = new ROS3D.Viewer({
+      divID : 'urdf',
+      width : 800,
+      height : 600,
+      antialias : true
+    });
+
+    // Add a grid.
+    viewer.addObject(new ROS3D.Grid());
+
+    // Setup a client to listen to TFs.
+    var tfClient = new ROSLIB.TFClient({
+      ros : ros,
+      angularThres : 0.01,
+      transThres : 0.01,
+      rate : 10.0
+    });
+
+    // Setup the URDF client.
+    var urdfClient = new ROS3D.UrdfClient({
+      ros : ros,
+      tfClient : tfClient,
+      path : 'http://resources.robotwebtools.org/',
+      rootObject : viewer.scene,
+      loader : ROS3D.COLLADA_LOADER_2
+    });
   }
-  </script>
-
-  <style>
-    html,body{height:100%;margin:0}
-    #view{position:fixed;inset:0}
-    #ui{
-      position:fixed;top:10px;left:10px;right:10px;max-width:900px;
-      background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
-      padding:12px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.18);
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial
-    }
-    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .btn{padding:8px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
-    .btn:active{transform:translateY(1px)}
-    .muted{color:#6b7280}
-    .code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; padding:.15rem .4rem; border-radius:.4rem; background:#f3f4f6}
-    #sliders{max-height:34vh;overflow:auto;margin-top:8px;border-top:1px dashed #e5e7eb;padding-top:8px}
-    .joint{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:6px 0}
-    #err{color:#b00020;font-size:12px;white-space:pre-wrap;margin-left:8px}
-  </style>
+</script>
 </head>
-<body>
-  <canvas id="view"></canvas>
 
-  <div id="ui">
-    <div class="row" style="justify-content:space-between">
-      <div>
-        <strong>URDF Viewer</strong>
-        <span class="muted"> · autoloads <span class="code">robot.urdf</span></span>
-        <span id="status" class="muted"></span>
-      </div>
-      <div class="row">
-        <button class="btn" id="reset">Reset</button>
-        <button class="btn" id="front">Front</button>
-        <button class="btn" id="side">Side</button>
-        <button class="btn" id="top">Top</button>
-        <span id="err"></span>
-      </div>
-    </div>
-    <div id="sliders"></div>
-    <p class="muted" style="margin-top:8px;font-size:12px">
-      Acknowledgement: adapted with reference to
-      <a href="https://wiki.ros.org/ros3djs/Tutorials/VisualizingAURDF" target="_blank">ros3djs “Visualizing a URDF” tutorial</a>.
-    </p>
-  </div>
-
-  <script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-    import URDFLoader from 'https://cdn.jsdelivr.net/gh/gkjohnson/urdf-loaders@master/javascript/URDFLoader.js';
-
-    // --- Three.js Scene ---
-    const canvas = document.getElementById('view');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
-    const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf6f7fb);
-    const camera = new THREE.PerspectiveCamera(45, 2, 0.01, 1000); camera.position.set(2.5, 1.6, 3.5);
-    const controls = new OrbitControls(camera, renderer.domElement); controls.target.set(0,0.5,0); controls.update();
-
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.9);
-    const dir  = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(5,5,5);
-    scene.add(hemi, dir, new THREE.GridHelper(10, 20, 0x888888, 0xdddddd), new THREE.AxesHelper(0.25));
-
-    function onResize(){
-      const w = innerWidth, h = innerHeight;
-      renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix();
-    }
-    addEventListener('resize', onResize); onResize();
-
-    // Camera presets
-    document.getElementById('reset').onclick = () => frameFit(robot || scene);
-    document.getElementById('front').onclick = () => setCamDir(new THREE.Vector3( 0, 0, 1));
-    document.getElementById('side').onclick  = () => setCamDir(new THREE.Vector3( 1, 0, 0));
-    document.getElementById('top').onclick   = () => setCamDir(new THREE.Vector3( 0, 1, 0));
-
-    function setCamDir(dirVec){
-      const tgt = controls.target.clone();
-      const dist = camera.position.distanceTo(tgt);
-      const off  = dirVec.clone().normalize().multiplyScalar(dist);
-      camera.position.copy(tgt).add(off);
-      camera.up.set(0,1,0);
-      camera.lookAt(tgt);
-      controls.update();
-    }
-
-    // --- URDF loader setup ---
-    const loader = new URDFLoader();
-    loader.packages = { '': '' }; // map package:// to current folder
-
-    let robot = null;
-    const errEl = (m)=> document.getElementById('err').textContent = m || '';
-    const statusEl = (m)=> document.getElementById('status').textContent = m ? ' · ' + m : '';
-
-    function frameFit(obj){
-      const box = new THREE.Box3().setFromObject(obj);
-      const size = Math.max(1e-3, box.getSize(new THREE.Vector3()).length());
-      const c    = box.getCenter(new THREE.Vector3());
-      controls.target.copy(c); controls.update();
-      camera.position.copy(c).add(new THREE.Vector3(size*0.6, size*0.4, size*0.8));
-      camera.lookAt(c);
-    }
-
-    function buildSliders(){
-      const wrap = document.getElementById('sliders'); wrap.innerHTML = '';
-      if (!robot || !robot.joints) return;
-      Object.entries(robot.joints).forEach(([name, j])=>{
-        if (!['revolute','continuous','prismatic'].includes(j.type)) return;
-        const row = document.createElement('div'); row.className = 'joint';
-        const label = document.createElement('label'); label.textContent = `${name} (${j.type})`;
-        const input = document.createElement('input'); input.type='range';
-        const lim = j.limits || { lower: -Math.PI, upper: Math.PI };
-        const prism = j.type === 'prismatic';
-        input.min  = prism ? (lim.lower ?? -0.1) : (lim.lower ?? -Math.PI);
-        input.max  = prism ? (lim.upper ??  0.1) : (lim.upper ??  Math.PI);
-        input.step = prism ? 0.001 : 0.01;
-        input.value = j.angle || 0;
-        input.oninput = e => {
-          const v = parseFloat(e.target.value);
-          prism ? j.setPosition(v) : j.setJointValue(v);
-        };
-        row.appendChild(label); row.appendChild(input); wrap.appendChild(row);
-      });
-    }
-
-    function loadURDF(path='robot.urdf'){
-      errEl(''); statusEl('loading…');
-      if (robot) { scene.remove(robot); robot = null; }
-      loader.load(
-        path,
-        r => { robot = r; scene.add(robot); frameFit(robot); buildSliders(); statusEl('loaded'); },
-        undefined,
-        e => { errEl(`Failed to load ${path}: ${e?.message || e}`); statusEl(''); }
-      );
-    }
-
-    // --- Run ---
-    loadURDF('robot.urdf');
-
-    (function animate(){
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    })();
-  </script>
+<body onload="init()">
+  <h1>Simple URDF Example</h1>
+  <div id="urdf"></div>
 </body>
 </html>
