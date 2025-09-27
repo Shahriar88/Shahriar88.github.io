@@ -44,7 +44,7 @@
     addEventListener('resize', onResize); onResize();
 
     const loader = new URDFLoader();
-    loader.packages = { '': 'urdf/' }; // maps package:// to /urdf/
+    loader.packages = { '': 'assets/' }; // maps package:// to /urdf/
     loader.loadMeshCb = (path, manager, done) => {
       const ext = path.split('.').pop().toLowerCase();
       if (ext==='stl') new STLLoader(manager).load(path, geo => done(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x9aa3b2, metalness:0.1, roughness:0.6}))));
