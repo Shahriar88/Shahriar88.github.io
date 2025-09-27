@@ -83,7 +83,9 @@
 <script type="module">
   import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js';
   import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.159.0/examples/jsm/controls/OrbitControls.js';
-  import URDFLoader from 'https://cdn.jsdelivr.net/npm/urdf-loader@0.10.3/build/URDFLoader.js';
+  import URDFLoader from 'https://cdn.jsdelivr.net/npm/urdf-loader@0.10.3/src/URDFLoader.js';
+  // (unpkg also works: 'https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js')
+
 
   // ----- three.js scene -----
   const canvas = document.getElementById('viewport');
