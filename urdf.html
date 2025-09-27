@@ -22,11 +22,7 @@
   <canvas id="viewport"></canvas>
   <div id="ui">
     <h3>URDF Viewer</h3>
-    <div>Default path: <code>assets/robot.urdf</code> (commit your URDF there).</div>
-    <div class="row" style="margin-top:6px">
-      <input id="urdfPath" type="text" value="assets/robot.urdf" style="width:260px">
-      <button id="loadBtn">Load</button>
-    </div>
+    <div>Auto-loading: <code>assets/robot.urdf</code></div>
     <div id="sliders"></div>
     <div id="err"></div>
   </div>
@@ -86,7 +82,7 @@
       camera.lookAt(c);
     }
 
-    async function loadURDF(path){
+    function loadURDF(path){
       if (robot) scene.remove(robot);
       const err = (m)=> document.getElementById('err').textContent = m || '';
       err('');
@@ -98,9 +94,8 @@
       );
     }
 
-    document.getElementById('loadBtn').onclick =
-      () => loadURDF(document.getElementById('urdfPath').value.trim());
-    loadURDF(document.getElementById('urdfPath').value);
+    // Auto-load default file
+    loadURDF('assets/robot.urdf');
 
     (function animate(){ requestAnimationFrame(animate); renderer.render(scene, camera); })();
   </script>
