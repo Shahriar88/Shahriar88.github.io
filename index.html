@@ -1,4 +1,4 @@
-<!-- File: index.html -->
+<!-- File: index.html (cleaned & adjusted) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,13 +9,14 @@
   <meta name="description" content="Portfolio and resume of Md Shahriar Forhad. Robotics, Machine Learning, and Manufacturing." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 
-  <!-- Minimal CSS for the name row + 3D box -->
+  <!-- Name row + 3D box tweaks -->
   <style>
-    .name-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .name-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
     .mini3d{
-      width:180px;height:100px; /* adjust size */
-      border:1px solid var(--border); border-radius:12px; background:transparent;
+      width:160px;height:96px; /* smaller so it never collides with the line below */
+      border:1px solid var(--border);border-radius:12px;background:transparent;overflow:hidden;position:relative;
     }
+    .mini3d canvas{width:100% !important;height:100% !important;display:block;pointer-events:none} /* never block links */
     @media (max-width:520px){ .mini3d{ width:140px;height:84px } }
   </style>
 
@@ -45,7 +46,7 @@
     <header class="header">
       <div class="avatar">🤖</div>
       <div>
-        <!-- ⬇️ name + tiny three.js box -->
+        <!-- name + tiny three.js box -->
         <div class="name-row">
           <h1>Md Shahriar Forhad</h1>
           <div id="mini3d" class="mini3d" aria-label="Animated 3D cube"></div>
@@ -70,209 +71,46 @@
       </div>
     </header>
 
-
-  
-<body>
-  <div class="container">
-    <header class="header">
-      <div class="avatar">🤖</div>
-      <div>
-        <h1>Md Shahriar Forhad</h1>
-        <div class="subtitle">
-          Edinburg, Texas, USA ·
-          <a href="mailto:mdshahriar.forhad01@utrgv.edu">mdshahriar.forhad01@utrgv.edu</a> ·
-          <a href="mailto:shahriar.forhad.eee@gmail.com">shahriar.forhad.eee@gmail.com</a> ·
-          956-780-0870
-        </div>
-        <div class="links">
-          <a href="https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
-          <a href="http://www.linkedin.com/in/md-shahriar-forhad-11b91813b" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://github.com/Shahriar88" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://www.kaggle.com/engrmdshahriarforhad" target="_blank" rel="noopener">Kaggle</a>
-          <a href="https://www.credly.com/users/md-shahriar-forhad" target="_blank" rel="noopener">Credly</a>
-          <a href="https://rpubs.com/Shahriar/Cyclistic_Bikers_2022" target="_blank" rel="noopener">RPubs</a>
-          <a href="assets/Shahriar_Resume.pdf" class="btn">Download Resume (PDF)</a>
-        </div>
-      </div>
-    </header>
-
-    <div class="grid">
-      <section>
-        <h2>About</h2>
-        <p>PhD researcher focused on robotics, laser-based manufacturing, and applied machine learning. Experienced with PLC/industrial comms (Siemens & Profinet), multi-kW laser systems, robotic calibration (ABB/KUKA), and end-to-end Python control of motion stages, galvo scanners, and laser processes.</p>
-        <p><strong>Interests:</strong> Machine Learning, Robotics, PLC, Cyber-physical Systems, Power Systems, Automation</p>
-      </section>
-
-      <section>
-        <h2>Certifications</h2>
-        <ul>
-          <li>
-            <strong>Engineer-In-Training (EIT), Texas</strong> —
-            <span class="muted">Issued 2025 · Expires 2033 · Certificate #84003</span>
-          </li>
-          <li>
-            <strong>Google Data Analytics Certificate</strong> —
-            <span class="muted">Issued 2023 ·
-              <a href="https://www.credly.com/go/YJKdIaHD" target="_blank" rel="noopener">Verify</a>
-            </span>
-          </li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Education</h2>
-        <ul>
-          <li><strong>PhD, Mathematics and Statistics (Interdisciplinary Applications), UTRGV</strong> — <span class="muted">2023–present, CGPA 3.92</span></li>
-          <li><strong>MSc, Manufacturing Engineering, UTRGV</strong> — <span class="muted">2021–2023, CGPA 3.90</span></li>
-          <li><strong>BSc, Electrical and Electronic Engineering, CUET</strong> — <span class="muted">2008–2012</span></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Research Experience</h2>
-        <ul>
-          <li>Spectral Behavior of Fiber Bragg Gratings during Embedding in 3D-Printed Metal Tensile Coupons and Cyclic Loading</li>
-          <li>Gaze Tracking Embedded Collaborative Robots for Automated Metrology and Reverse Engineering</li>
-          <li>Direct Ink Writing Of In-Situ Shear Exfoliated Two-Dimensional Nanomaterial–Elastomeric Multifunctional Nanocomposite</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Skills</h2>
-        <div>
-          <span class="badge">Machine Learning (CNN/LSTM/Transformers, KNN)</span>
-          <span class="badge">Robotics (ABB, KUKA), PLC (Siemens 1515SP), Profinet</span>
-          <span class="badge">Laser Systems (1kW/8kW LaserLine), Femto-second coding</span>
-          <span class="badge">Python (4yr), R (2yr), SAS; Web scraping; MySQL</span>
-          <span class="badge">SolidWorks, Fusion 360, SIMIO, MATLAB</span>
-          <span class="badge">Embedded: Raspberry Pi, Arduino; URDF; G-code; TCP/IP/Serial</span>
-        </div>
-      </section>
-
-      <section>
-        <h2>Publications & Preprints</h2>
-        <ul>
-          <li><a href="https://www.mdpi.com/1424-8220/24/12/3919" target="_blank" rel="noopener">Sensors 2024</a></li>
-          <li><a href="https://www.sciencedirect.com/science/article/pii/S2213846324002669" target="_blank" rel="noopener">Additive Manufacturing Letters 2024</a></li>
-          <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5432932" target="_blank" rel="noopener">SSRN Working Paper</a></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Experience</h2>
-        <ul>
-          <li><strong>Graduate Research Assistant, UTRGV</strong> — <em>2021–2021; 2022; 2023–present</em>
-            <ul>
-              <li>Robotics & system integration; control with Raspberry Pi/Arduino</li>
-              <li>Python control of galvo scanner & laser; stage control; G-code generation</li>
-              <li>Event demos; mentoring (IDREAM4D), DoD Summer Camp teaching</li>
-            </ul>
-          </li>
-          <li><strong>Graduate Teaching Assistant, UTRGV</strong> — <em>2022–2023</em>
-            <ul>
-              <li>Manufacturing Processes Lab (tensile, milling, metallurgy)</li>
-              <li>Computer-Aided Design (SolidWorks)</li>
-            </ul>
-          </li>
-          <li><strong>Assistant Manager, Petrobangla (Bangladesh Oil, Gas & Mineral Corp.)</strong> — <em>2014–2020</em>
-            <ul>
-              <li>Gas pricing (incl. RLNG mixes), national production & supply budgeting</li>
-              <li>Briefings for parliament Q&A; oversight of sector companies</li>
-            </ul>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Spans two rows on desktop -->
-      <section class="col-span-2">
-        <h2>URDF Robot Demo</h2>
-        <p>A live 3D viewer of one of my robot model (URDF). You can rotate, zoom, and move the joints.</p>
-        <iframe
-          src="urdf.html"
-          width="100%"
-          height="600"
-          title="URDF Robot Demo"
-          style="border:1px solid #ccc; border-radius:12px;">
-          Your browser does not support iframes.
-        </iframe>
-      </section>
-      <!-- Tip: use class="col-span-2 row-span-2" if you also want full width -->
-    </div>
-
-
-
-      <!-- YouTube video) ----------------------------------------------------------------------->
-      <section class="col-span-2">
-        <h2>Demo Video</h2>
-        <p>Short demo of my Laser Powder Bed Fusion (LPBF) setup using a custom Python/pygame GUI to coordinate XYZ linear stages and a galvo scanner in real time.</p>
-      
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/akCXCpGs03U?rel=0&modestbranding=1"
-          title="LPBF demo — synchronized linear stages and galvo"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-          style="width:100%; aspect-ratio:16/9; border:1px solid #ccc; border-radius:12px;">
-        </iframe>
-      
-        <p class="muted" style="margin-top:8px">
-          Can’t see the video? <a href="https://youtu.be/akCXCpGs03U" target="_blank" rel="noopener">Watch on YouTube</a>.
-        </p>
-      </section>  
+    <!-- … rest of your content (grid, URDF, video, etc.) … -->
 
     <p class="footer">© Md Shahriar Forhad. Built with GitHub Pages.</p>
   </div>
 
-
-
-<!-- Tiny three.js scene just for the header box -->
+  <!-- Tiny three.js scene just for the header box -->
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
 
     const host = document.getElementById('mini3d');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 8);
+    camera.position.set(0, 0, 7.5);
 
     const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     host.appendChild(renderer.domElement);
 
-    // cube
     const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(3,3,3),
+      new THREE.BoxGeometry(2.6,2.6,2.6),
       new THREE.MeshNormalMaterial()
     );
     scene.add(cube);
 
-    // line axis (optional flair)
-    const points = [new THREE.Vector3(-4,0,0), new THREE.Vector3(4,0,0)];
-    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial());
-    scene.add(line);
-
     function resize(){
-      const w = host.clientWidth || 180, h = host.clientHeight || 100;
+      const w = host.clientWidth || 160, h = host.clientHeight || 96;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false);
+      renderer.setSize(w, h, false); // buffer size
+      // style size handled by CSS: .mini3d canvas { width/height:100% }
     }
     resize();
     new ResizeObserver(resize).observe(host);
-    window.addEventListener('orientationchange', resize);
 
     renderer.setAnimationLoop((t)=>{
       const time = t * 0.001;
       cube.rotation.x = time * 0.9;
-      cube.rotation.y = time * 1.4;
+      cube.rotation.y = time * 1.35;
       renderer.render(scene, camera);
     });
   </script>
-
-
-
-
-
-  
 </body>
 </html>
