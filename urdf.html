@@ -66,14 +66,29 @@
     
     /*loader.packages = {
       packageName: './package/dir/' // The equivalent of a (list of) ROS package(s):// directory
-    };*/
+    };
     loader.load(
       'assets/robot2.urdf', // The path to the URDF within the package OR absolute
       robot => {
         // The robot is loaded!
         scene.add(robot);
       }
+    );*/
+
+
+    loader.load(
+      'assets/robot2.urdf',
+      robot => {
+        scene.add(robot);
+      },
+      undefined,
+      error => {
+        console.error('Failed to load URDF:', error);
+      }
     );
+
+
+    
   </script>
 </body>
 </html>
