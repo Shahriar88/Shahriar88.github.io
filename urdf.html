@@ -61,7 +61,7 @@
     const manager = new THREE.LoadingManager();
     const loader = new URDFLoader(manager);
     loader.parseVisual = true;      // ← This is default
-    loader.parseCollision = false;   // ← This enables/disables collision shapes too
+    loader.parseCollision = true;   // ← This enables/disables collision shapes too
 
 
     
