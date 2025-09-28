@@ -7,13 +7,15 @@
 <body>
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
-    import { LoadingManager } from 'https://unpkg.com/three@0.150.1/build/three.module.js';
+    
+    //import { LoadingManager } from 'https://unpkg.com/three@0.150.1/build/three.module.js';
 
     import URDFLoader from './urdf_js/URDFLoader.js';
 
     // ...init three.js scene...
 
-    const manager = new LoadingManager();
+    //const manager = new LoadingManager();
+    const manager = new THREE.LoadingManager();
     const loader = new URDFLoader(manager);
     loader.packages = {
       packageName: './package/dir/' // The equivalent of a (list of) ROS package(s):// directory
