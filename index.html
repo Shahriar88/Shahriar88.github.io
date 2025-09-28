@@ -73,41 +73,8 @@
   </div>
 
   <!-- Tiny three.js scene just for the header box -->
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
+  <script type="module" src="./urdf_js/box.js"></script>
 
-    const host = document.getElementById('mini3d');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 7.5);
-
-    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    host.appendChild(renderer.domElement);
-
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(2.6,2.6,2.6),
-      new THREE.MeshNormalMaterial()
-    );
-    scene.add(cube);
-
-    function resize(){
-      const w = host.clientWidth || 160, h = host.clientHeight || 96;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false); // buffer size
-      // style size handled by CSS: .mini3d canvas { width/height:100% }
-    }
-    resize();
-    new ResizeObserver(resize).observe(host);
-
-    renderer.setAnimationLoop((t)=>{
-      const time = t * 0.001;
-      cube.rotation.x = time * 0.9;
-      cube.rotation.y = time * 1.35;
-      renderer.render(scene, camera);
-    });
-  </script>
 
 
 
