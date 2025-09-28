@@ -3,18 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <title>URDF Loader</title>
+
   <style>
     /* Tiny HUD to tweak position */
-    #hud {
+    
+    #hud{
       position: fixed; top: 10px; left: 10px; z-index: 10;
-      background: rgba(255,255,255,0.9); border: 1px solid #ddd; border-radius: 8px;
-      padding: 8px 10px; font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #ddd; border-radius: 8px;
+      padding: 8px 10px;
+      font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      width: clamp(280px, 42vw, 520px); /* wider container */
     }
-    #hud label { display: grid; grid-template-columns: 16px 1fr 42px; gap: 6px; align-items: center; margin: 6px 0; }
-    #hud input[type="range"] { width: 200px; }
-    #hud input[type="number"] { width: 42px; }
+    #hud label{
+      display: grid;
+      grid-template-columns: 16px 1fr max-content; /* X | SLIDER | NUMBER */
+      gap: 8px; align-items: center; margin: 8px 0;
+    }
+    #hud input[type="range"]{ width: 100%; }          /* fill the 1fr column */
+    #hud input[type="number"]{
+      width: 7.5ch;                                    /* fits “-0.1234” etc. */
+      padding: 4px 6px; text-align: right;
+    }
+
   </style>
+  
 </head>
+
+
+  
 <body>
   <!-- Minimal position controls -->
   <div id="hud">
