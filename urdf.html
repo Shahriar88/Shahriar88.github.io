@@ -93,6 +93,8 @@
       'assets/robot2.urdf',
       loaded => {
         robot = loaded;
+        // Set initial placement BEFORE syncing HUD (so sliders match).
+        robot.position.set(INITIAL_POS.x, INITIAL_POS.y, INITIAL_POS.z); // WHY: defines start XYZ
         scene.add(robot);
 
         // Initialize HUD values based on current robot.position
@@ -152,8 +154,6 @@
     window.moveRobotTo = (x, y, z) => {
       if (!robot) return;
       robot.position.set(x, y, z);
-    // Set initial placement BEFORE syncing HUD (so sliders match).
-      robot.position.set(INITIAL_POS.x, INITIAL_POS.y, INITIAL_POS.z); // WHY: defines start XYZ
       syncHUDFromRobot();
     };
   </script>
