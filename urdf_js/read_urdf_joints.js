@@ -18,6 +18,9 @@ export async function getURDFJointStates(urdfPath) {
 
         for (const jointName in robot.joints) {
           const joint = robot.joints[jointName];
+
+          // Skip fixed joints
+          if (joint.jointType === 'fixed') continue;
           jointStates.push({
             name: jointName,
             value: joint.jointValue || 0
