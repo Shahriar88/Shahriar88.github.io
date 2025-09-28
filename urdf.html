@@ -23,7 +23,7 @@
     import { OrbitControls } from "three/addons/controls/OrbitControls.js";
     import URDFLoader from "urdf-loader";
 
-    // Set up scene, camera, renderer
+    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(2, 2, 3);
@@ -35,24 +35,22 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.update();
 
-    // Lights
+    // Lighting
     scene.add(new THREE.AmbientLight(0x404040));
-    const dir = new THREE.DirectionalLight(0xffffff, 1);
-    dir.position.set(5, 10, 7);
-    scene.add(dir);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5, 10, 7);
+    scene.add(light);
 
-    // URDF loader
+    // URDF Loader
     const loader = new URDFLoader();
-    // If your URDF references meshes via package://, you need to tell loader where the packages live
+
+    // (Optional) Handle package:// URIs
     loader.packages = {
       my_robot_package: "path/to/mesh/folder/"
-      // e.g. "my_robot_package": "./assets/meshes/"
     };
 
-    // Optional: override how meshes are loaded if you need e.g. OBJ or GLTF
+    // Optional: Add support for GLTF/GLB if needed
     loader.loadMeshCb = (meshPath, manager, onComplete) => {
-      // Default loader supports STL / DAE, but you can add more
-      // Example using GLTFLoader:
       import("three/addons/loaders/GLTFLoader.js").then(({ GLTFLoader }) => {
         const gltfLoader = new GLTFLoader(manager);
         gltfLoader.load(
@@ -67,36 +65,36 @@
       });
     };
 
-    // Load the URDF
+    // Load the URDF file
     loader.load(
       "assets/robot.urdf",
       (robot) => {
         scene.add(robot);
-        // Optional: rotate / reposition
         robot.rotation.x = -Math.PI / 2;
-
-        animate();
       },
       (progress) => {
-        // optional, progress callback
-        console.log("URDF loading:", progress.loaded, "/", progress.total);
+        console.log("URDF loading progress:", progress.loaded, "/", progress.total);
       },
       (err) => {
-        console.error("Failed to load URDF:", err);
+        console.error("URDF load error:", err);
       }
     );
 
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
+    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
       renderer.render(scene, camera);
     }
+
+    animate();
+
+    // Handle window resizing
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
