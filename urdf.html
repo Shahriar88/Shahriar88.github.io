@@ -1,169 +1,158 @@
-<!-- File: public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>URDF + Three.js Viewer</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <style>
-      html, body { height: 100%; margin: 0; background:#f5f7fa; }
-      canvas { display: block; }
-      .error {
-        position: fixed; top: 12px; left: 12px; z-index: 10;
-        padding: 8px 10px; border-radius: 10px;
-        background: #fff3f3; color: #b00020; border: 1px solid #ffd2d2;
-        font: 12px/1.4 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-        max-width: 70ch; white-space: pre-wrap;
-      }
-    </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/",
-          "urdf-loader": "https://cdn.jsdelivr.net/npm/urdf-loader@0.12.6/dist/URDFLoader.js"
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <script type="module">
-      import * as THREE from "three";
-      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-      import * as URDFModule from "urdf-loader"; // supports both named/default export
-
-      // Resolve class regardless of CDN's export shape
-      const URDFLoader = URDFModule.URDFLoader ?? URDFModule.default;
-
-      // --- Renderer ----------------------------------------------------------
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.outputColorSpace = THREE.SRGBColorSpace; // WHY: correct colors
-      renderer.shadowMap.enabled = true;
-      document.body.appendChild(renderer.domElement);
-
-      // --- Scene / Camera / Controls ----------------------------------------
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf5f7fa);
-
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 2000);
-      camera.position.set(2.5, 2.0, 3.0);
-
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-
-      // --- Lighting ----------------------------------------------------------
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      const key = new THREE.DirectionalLight(0xffffff, 1.1);
-      key.position.set(5, 8, 6);
-      key.castShadow = true; // WHY: improves perception of shape
-      key.shadow.mapSize.set(2048, 2048);
-      scene.add(key);
-
-      // --- Ground / Grid -----------------------------------------------------
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(200, 200),
-        new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: 1, metalness: 0 })
-      );
-      ground.rotation.x = -Math.PI / 2;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      const grid = new THREE.GridHelper(10, 20);
-      grid.position.y = 0.001;
-      scene.add(grid);
-
-      // --- URDF Loader -------------------------------------------------------
-      const loader = new URDFLoader();
-      loader.fetchOptions = { mode: "cors" };
-      // Map relative URIs and package:// URIs (adjust to your layout)
-      loader.packages = {
-        "": "assets/",                        // relative URIs inside URDF
-        "my_robot_package": "assets/my_robot_package/" // package://my_robot_package/...
-      };
-
-      // Robust mesh loader for GLB/GLTF, DAE, STL
-      loader.loadMeshCb = async (meshPath, manager, onComplete) => {
-        try {
-          const url = meshPath;
-          const ext = url.split("?")[0].split("#")[0].split(".").pop()?.toLowerCase();
-
-          if (ext === "glb" || ext === "gltf") {
-            const { GLTFLoader } = await import("three/addons/loaders/GLTFLoader.js");
-            const gltfLoader = new GLTFLoader(manager);
-            gltfLoader.load(url, (gltf) => {
-              const obj = gltf.scene || gltf.scenes?.[0];
-              if (obj) onComplete(obj); else onComplete(null);
-            }, undefined, () => onComplete(null));
-            return;
-          }
-
-          if (ext === "dae") {
-            const { ColladaLoader } = await import("three/addons/loaders/ColladaLoader.js");
-            const daeLoader = new ColladaLoader(manager);
-            daeLoader.load(url, (collada) => onComplete(collada.scene || null), undefined, () => onComplete(null));
-            return;
-          }
-
-          if (ext === "stl") {
-            const { STLLoader } = await import("three/addons/loaders/STLLoader.js");
-            const stlLoader = new STLLoader(manager);
-            stlLoader.load(url, (geom) => {
-              const mat = new THREE.MeshStandardMaterial({ color: 0x9a9a9a, roughness: 0.85, metalness: 0.05 });
-              const mesh = new THREE.Mesh(geom, mat);
-              onComplete(mesh);
-            }, undefined, () => onComplete(null));
-            return;
-          }
-
-          // Fallback: let default loader try (or fail gracefully)
-          onComplete(null);
-        } catch (e) {
-          console.warn("Mesh load error:", meshPath, e);
-          onComplete(null);
-        }
-      };
-
-      let robot = null;
-
-      loader.load(
-        "assets/robot.urdf",
-        (model) => {
-          robot = model;
-
-          // Convert from Z-up (URDF) to Y-up (Three)
-          robot.rotation.x = -Math.PI / 2;
-
-          robot.traverse((o) => {
-            if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
-          });
-
-          scene.add(robot);
-          frameObject(robot, camera, controls);
-        },
-        // progress
-        (xhr) => {
-          // console.log("URDF progress", xhr.loaded, "/", xhr.total);
-        },
-        (err) => showError(`URDF load error: ${err?.message || err}`)
-      );
-
-      // --- Utilities ---------------------------------------------------------
-      function frameObject(object3D, cam, ctrls) {
-        const box = new THREE.Box3().setFromObject(object3D);
-        if (!isFinite(box.min.x) || !isFinite(box.max.x)) return;
-
-        const size = new THREE.Vector3();
-        const center = new THREE.Vector3();
-        box.getSize(size);
-        box.getCenter(center);
-
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fitHeight = maxDim / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2));
-        const fitWidth  = fitHeight / cam.aspect;
-        const distance = 1.25 * Math.max(fitHeight, fitWidth);
-
-        const dir = new THREE.Vector3(1, 0.6, 1).normalize();
-        cam.position.copy(center).addScaledVector(dir, distance);
-        cam.near = Math.m
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js â The scene
+      <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+               Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #262626;
+            overflow: hidden;
+         }
+         #btn-conatiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 10vh;
+            width: 100%;
+         }
+         @media screen and (max-width:600px){
+            #btn-container{
+               display: flex;
+               flex-direction: column;
+            }
+         }
+         .btn {
+            padding: 5px 15px;
+            margin: 5px 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+         }
+         .add {
+            color: green;
+         }
+         .rem {
+            color: red;
+         }
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="btn-conatiner">
+         <button class="btn add">Add Cube</button>
+         <button class="btn rem">Remove Cube</button>
+      </div>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // Experimenting with different methods of scene
+         // add, remove, children, getElementById
+         // sizes
+         let width = window.innerWidth
+         let height = window.innerHeight
+         const gui = new dat.GUI()
+         // scene
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626)
+         // lights
+         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+         scene.add(ambientLight)
+         const light = new THREE.PointLight(0xffffff, 0.5)
+         light.position.set(-10, 10, -10)
+         // for shadow
+         light.castShadow = true
+         light.shadow.mapSize.width = 1024
+         light.shadow.mapSize.height = 1024
+         light.shadow.camera.near = 0.1
+         light.shadow.camera.far = 1000
+         scene.add(light)
+         // camera
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
+         camera.position.set(0, 10, 40)
+         camera.lookAt(0, 0, 0)
+         gui.add(camera.position, 'z', 10, 200, 1).name('camera-z')
+         // plane
+         const planeGeometry = new THREE.PlaneGeometry(100, 100)
+         const plane = new THREE.Mesh(
+            planeGeometry,
+            new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+         )
+         plane.rotateX(Math.PI / 2)
+         plane.position.y = -1.75
+         plane.receiveShadow = true
+         scene.add(plane)
+         // scene.add
+         function addCube() {
+            const cubeSize = Math.ceil(Math.random() * 3)
+            const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize)const cubeMaterial = new THREE.MeshLambertMaterial({
+               color: Math.random() * 0xffffff
+            })
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+            cube.castShadow = true
+            cube.name = 'cube-' + scene.children.length
+            cube.position.x = -30 + Math.round(Math.random() * 50)
+            cube.position.y = Math.round(Math.random() * 5)
+            cube.position.z = -20 + Math.round(Math.random() * 50)
+            scene.add(cube)
+         }
+         const add = document.querySelector('.add')
+         add.addEventListener('click', () => {
+            addCube()
+            console.log('cube added')
+         })
+         // scene.remove
+         function removeCube() {
+            const allChildren = scene.children
+            const lastObject = allChildren[allChildren.length - 1]
+            if (lastObject.name) {
+               scene.remove(lastObject)
+            }
+         }
+         const remove = document.querySelector('.rem')
+         remove.addEventListener('click', () => {
+            removeCube()
+            console.log('cube removed')
+         })
+         // scene.children
+         console.log(scene.children)
+         // responsivenesswindow.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera)
+         })
+         // renderer
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+         // animation
+         function animate() {
+            requestAnimationFrame(animate)
+            renderer.render(scene, camera)
+         }
+         // rendering the scene
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>
