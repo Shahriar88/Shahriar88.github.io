@@ -8,17 +8,25 @@
   <link rel="stylesheet" href="styles.css" />
   <meta name="description" content="Portfolio and resume of Md Shahriar Forhad. Robotics, Machine Learning, and Manufacturing." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <!-- Minimal CSS for the name row + 3D box -->
+  <style>
+    .name-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .mini3d{
+      width:180px;height:100px; /* adjust size */
+      border:1px solid var(--border); border-radius:12px; background:transparent;
+    }
+    @media (max-width:520px){ .mini3d{ width:140px;height:84px } }
+  </style>
+
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Md Shahriar Forhad",
-    "email": [
-      "mailto:mdshahriar.forhad01@utrgv.edu",
-      "mailto:shahriar.forhad.eee@gmail.com"
-    ],
-    "url": "https://Shahriar88.github.io",
-    "sameAs": [
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Md Shahriar Forhad",
+    "email":["mailto:mdshahriar.forhad01@utrgv.edu","mailto:shahriar.forhad.eee@gmail.com"],
+    "url":"https://Shahriar88.github.io",
+    "sameAs":[
       "https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en",
       "http://www.linkedin.com/in/md-shahriar-forhad-11b91813b",
       "https://github.com/Shahriar88",
@@ -26,20 +34,44 @@
       "https://www.credly.com/users/md-shahriar-forhad",
       "https://rpubs.com/Shahriar/Cyclistic_Bikers_2022"
     ],
-    "jobTitle": "Graduate Research Assistant",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Edinburg",
-      "addressRegion": "TX",
-      "addressCountry": "US"
-    },
-    "alumniOf": [
-      { "@type": "CollegeOrUniversity", "name": "UTRGV" },
-      { "@type": "CollegeOrUniversity", "name": "CUET" }
-    ]
+    "jobTitle":"Graduate Research Assistant",
+    "address":{"@type":"PostalAddress","addressLocality":"Edinburg","addressRegion":"TX","addressCountry":"US"},
+    "alumniOf":[{"@type":"CollegeOrUniversity","name":"UTRGV"},{"@type":"CollegeOrUniversity","name":"CUET"}]
   }
   </script>
 </head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="avatar">🤖</div>
+      <div>
+        <!-- ⬇️ name + tiny three.js box -->
+        <div class="name-row">
+          <h1>Md Shahriar Forhad</h1>
+          <div id="mini3d" class="mini3d" aria-label="Animated 3D cube"></div>
+        </div>
+
+        <div class="subtitle">
+          Edinburg, Texas, USA ·
+          <a href="mailto:mdshahriar.forhad01@utrgv.edu">mdshahriar.forhad01@utrgv.edu</a> ·
+          <a href="mailto:shahriar.forhad.eee@gmail.com">shahriar.forhad.eee@gmail.com</a> ·
+          956-780-0870
+        </div>
+
+        <div class="links">
+          <a href="https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+          <a href="http://www.linkedin.com/in/md-shahriar-forhad-11b91813b" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/Shahriar88" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.kaggle.com/engrmdshahriarforhad" target="_blank" rel="noopener">Kaggle</a>
+          <a href="https://www.credly.com/users/md-shahriar-forhad" target="_blank" rel="noopener">Credly</a>
+          <a href="https://rpubs.com/Shahriar/Cyclistic_Bikers_2022" target="_blank" rel="noopener">RPubs</a>
+          <a href="assets/Shahriar_Resume.pdf" class="btn">Download Resume (PDF)</a>
+        </div>
+      </div>
+    </header>
+
+
+  
 <body>
   <div class="container">
     <header class="header">
@@ -187,12 +219,60 @@
         <p class="muted" style="margin-top:8px">
           Can’t see the video? <a href="https://youtu.be/akCXCpGs03U" target="_blank" rel="noopener">Watch on YouTube</a>.
         </p>
-      </section>
-
-
-    
+      </section>  
 
     <p class="footer">© Md Shahriar Forhad. Built with GitHub Pages.</p>
   </div>
+
+
+
+<!-- Tiny three.js scene just for the header box -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
+
+    const host = document.getElementById('mini3d');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 8);
+
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    host.appendChild(renderer.domElement);
+
+    // cube
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(3,3,3),
+      new THREE.MeshNormalMaterial()
+    );
+    scene.add(cube);
+
+    // line axis (optional flair)
+    const points = [new THREE.Vector3(-4,0,0), new THREE.Vector3(4,0,0)];
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial());
+    scene.add(line);
+
+    function resize(){
+      const w = host.clientWidth || 180, h = host.clientHeight || 100;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    resize();
+    new ResizeObserver(resize).observe(host);
+    window.addEventListener('orientationchange', resize);
+
+    renderer.setAnimationLoop((t)=>{
+      const time = t * 0.001;
+      cube.rotation.x = time * 0.9;
+      cube.rotation.y = time * 1.4;
+      renderer.render(scene, camera);
+    });
+  </script>
+
+
+
+
+
+  
 </body>
 </html>
