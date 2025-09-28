@@ -1,8 +1,6 @@
 /*import * as THREE from 'three';*/
-<script type="module">
-  import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
-</script>
 
+import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
 import { URDFRobot, URDFJoint, URDFLink, URDFCollider, URDFVisual, URDFMimicJoint } from './URDFClasses.js';
@@ -659,3 +657,4 @@ class URDFLoader {
     }
 
 };
+</script>
