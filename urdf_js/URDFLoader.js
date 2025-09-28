@@ -1,7 +1,8 @@
 /*import * as THREE from 'three';*/
 
 import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
-import { STLLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/STLLoader.js';
+import { STLLoader } from './STLLoader.js';
+//import { STLLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/STLLoader.js';
 //import { ColladaLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/ColladaLoader.js';
 //import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 //import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
