@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js - Line basic</title>
+      <style>
+         /* Reset and base styling */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+               Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+         }
+         /* Container for Three.js renderer */
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <!-- Load Three.js and dat.GUI libraries -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // ---------------------------------------------
+         // Creating a line using LineBasicMaterial
+         // ---------------------------------------------
+
+         // GUI panel for interactive controls
+         const gui = new dat.GUI()
+
+         // Initial canvas size
+         let width = window.innerWidth
+         let height = window.innerHeight
+
+         // Scene setup
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626) // dark gray background
+
+         // Camera setup
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
+         camera.position.set(0, 0, 50) // move camera back
+         camera.lookAt(0, 0, 0) // look at center of scene
+
+         // Add camera controls to dat.GUI
+         const camFolder = gui.addFolder('Camera')
+         camFolder.add(camera.position, 'z', 10, 100) // adjust Z-position interactively
+         camFolder.open()
+
+         // ---------------------------------------------
+         // Create line geometry from points
+         // ---------------------------------------------
+
+         // Define 3 points for the line
+         const points = []
+         points.push(new THREE.Vector3(-10, 0, 0))   // Point 1
+         points.push(new THREE.Vector3(0, -20, 0))   // Point 2
+         points.push(new THREE.Vector3(10, 0, 0))    // Point 3
+
+         // Add GUI folders for controlling each point
+         const folders = [gui.addFolder('Point 1'), gui.addFolder('Point 2'), gui.addFolder('Point 3')]
+         folders.forEach((folder, i) => {
+            // Allow X, Y, Z adjustments
+            folder.add(points[i], 'x', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'y', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'z', -30, 30, 1).onChange(redraw)
+            folder.open()
+         })
+
+         // Create buffer geometry from points
+         const geometry = new THREE.BufferGeometry().setFromPoints(points)
+
+         // Material for line (white color)
+         const material = new THREE.LineBasicMaterial({
+            color: 0xffffff,
+            linewidth: 2 // NOTE: works only on some renderers
+         })
+
+         // Create line mesh and add to scene
+         const line = new THREE.Line(geometry, material)
+         line.position.set(0, 10, 0) // shift line upward
+         scene.add(line)
+
+         // Redraw line when points are modified
+         function redraw() {
+            let newGeometry = new THREE.BufferGeometry().setFromPoints(points)
+            line.geometry.dispose() // free old geometry
+            line.geometry = newGeometry
+         }
+
+         // ---------------------------------------------
+         // Responsiveness: adjust on window resize
+         // ---------------------------------------------
+         window.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera)
+         })
+
+         // ---------------------------------------------
+         // Renderer setup
+         // ---------------------------------------------
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+         // ---------------------------------------------
+         // Animation loop
+         // ---------------------------------------------
+         function animate() {
+            requestAnimationFrame(animate)
+            renderer.render(scene, camera)
+         }
+
+         // Add renderer to DOM and start rendering
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>

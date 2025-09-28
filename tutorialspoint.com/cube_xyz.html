@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js - Position GUI</title>
+      <style>
+         /* Reset & base styling */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+            Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+         }
+         /* Container for Three.js canvas */
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <!-- Import Three.js and dat.GUI -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // ---------------------------------------------
+         // Adding GUI (dat.GUI) controls to interact with cube
+         // ---------------------------------------------
+
+         // GUI setup
+         const gui = new dat.GUI()
+
+         // Screen sizes
+         let width = window.innerWidth
+         let height = window.innerHeight
+
+         // Scene
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626) // dark gray
+
+         // Camera
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
+         camera.position.set(0, 0, 10) // positioned slightly back
+
+         // Cube geometry & material
+         const geometry = new THREE.BoxGeometry(2, 2, 2)
+         const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,  // white
+            wireframe: true   // display edges instead of solid faces
+         })
+
+         // Add toggle in GUI for wireframe mode
+         gui.add(material, 'wireframe')
+
+         // Create cube mesh
+         const cube = new THREE.Mesh(geometry, material)
+         scene.add(cube)
+
+         // Add cube position controls in GUI
+         gui.add(cube.position, 'x') // slider for x-axis position
+         gui.add(cube.position, 'y') // slider for y-axis position
+         gui.add(cube.position, 'z') // slider for z-axis position
+
+         // ---------------------------------------------
+         // Handle window resizing
+         // ---------------------------------------------
+         window.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera)
+         })
+
+         // Renderer
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+         // ---------------------------------------------
+         // Animation loop
+         // ---------------------------------------------
+         function animate() {
+            requestAnimationFrame(animate)
+
+            // Slow cube rotation
+            cube.rotation.x += 0.005
+            cube.rotation.y += 0.01
+
+            renderer.render(scene, camera)
+         }
+
+         // ---------------------------------------------
+         // Add renderer to DOM and start rendering
+         // ---------------------------------------------
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js – Resizing browser</title>
+      <style>
+         /* Reset and base styling */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+            Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+         }
+         /* Container for Three.js canvas */
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <!-- Import Three.js and dat.GUI -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // ---------------------------------------------
+         // Three.js scene with browser resize handling
+         // ---------------------------------------------
+
+         // Initial width/height from browser window
+         let width = window.innerWidth
+         let height = window.innerHeight
+
+         // GUI setup (currently unused, but available)
+         const gui = new dat.GUI()
+
+         // Scene
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626) // dark gray background
+
+         // Camera setup
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
+         camera.position.set(0, 0, 10)
+
+         // Cube geometry and material
+         const geometry = new THREE.BoxGeometry(2, 2, 2)
+         const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true // show only edges
+         })
+
+         // Cube mesh
+         const cube = new THREE.Mesh(geometry, material)
+         scene.add(cube)
+
+         // ---------------------------------------------
+         // Responsiveness: update sizes and camera on resize
+         // ---------------------------------------------
+         window.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+
+            // Update camera aspect ratio
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+
+            // Update renderer size
+            renderer.setSize(window.innerWidth, window.innerHeight)
+
+            // Re-render with new dimensions
+            renderer.render(scene, camera)
+         })
+
+         // Renderer setup
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+         // ---------------------------------------------
+         // Animation loop
+         // ---------------------------------------------
+         function animate() {
+            requestAnimationFrame(animate)
+
+            // Rotate cube slightly each frame
+            cube.rotation.x += 0.005
+            cube.rotation.y += 0.01
+
+            renderer.render(scene, camera)
+         }
+
+         // ---------------------------------------------
+         // Add renderer to DOM and start rendering
+         // ---------------------------------------------
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+
+         // Initial render and start animation loop
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>

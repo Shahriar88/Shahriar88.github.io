@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js - More variables</title>
+      <style>
+         /* Reset default styling */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+               Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+         }
+         /* Container for the renderer */
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <!-- Import Three.js and dat.GUI -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // ---------------------------------------------
+         // Adding folders in dat.GUI to organize variables
+         // ---------------------------------------------
+
+         // dat.GUI controls
+         const gui = new dat.GUI()
+
+         // Sizes
+         let width = window.innerWidth
+         let height = window.innerHeight
+
+         // Scene
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626) // dark gray background
+
+         // Camera
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
+         camera.position.set(0, 0, 10)
+
+         // Camera controls (Z-position)
+         const camFolder = gui.addFolder('Camera')
+         camFolder.add(camera.position, 'z').min(10).max(60).step(10)
+
+         // Cube geometry + material
+         const geometry = new THREE.BoxGeometry(2, 2, 2)
+         const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true
+         })
+
+         // Folder for material controls
+         const cubeColor = { color: 0xffffff }
+         const materialFolder = gui.addFolder('Material')
+         materialFolder.add(material, 'wireframe') // toggle wireframe mode
+         materialFolder.addColor(cubeColor, 'color').onChange(() => {
+            // Update cube color when changed in GUI
+            material.color.set(cubeColor.color)
+         })
+         materialFolder.open()
+
+         // Create cube mesh
+         const cube = new THREE.Mesh(geometry, material)
+         scene.add(cube)
+
+         // Cube folder to group position & scale controls
+         const cubeFolder = gui.addFolder('Cube')
+
+         // Position folder
+         const posFolder = cubeFolder.addFolder('Position')
+         posFolder.add(cube.position, 'x', 0, 5, 0.1)
+         posFolder.add(cube.position, 'y', 0, 5, 0.1)
+         posFolder.add(cube.position, 'z', 0, 5, 0.1)
+         posFolder.open()
+
+         // Scale folder
+         const scaleFolder = cubeFolder.addFolder('Scale')
+         scaleFolder.add(cube.scale, 'x', 0, 5, 0.1).name('Width')
+         scaleFolder.add(cube.scale, 'y', 0, 5, 0.1).name('Height')
+         scaleFolder.add(cube.scale, 'z', 0, 5, 0.1).name('Depth')
+         scaleFolder.open()
+
+         cubeFolder.open()
+
+         // ---------------------------------------------
+         // Handle window resizing
+         // ---------------------------------------------
+         window.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera)
+         })
+
+         // Renderer
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+         // Animation loop
+         function animate() {
+            requestAnimationFrame(animate)
+            // Rotate cube slowly
+            cube.rotation.x += 0.005
+            cube.rotation.y += 0.01
+            renderer.render(scene, camera)
+         }
+
+         // Attach renderer to DOM and start animation
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>

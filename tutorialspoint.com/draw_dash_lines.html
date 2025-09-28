@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Three.js - Dashed line</title>
+      <style>
+         /* Reset base styling */
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+               Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+         }
+         html,
+         body {
+            height: 100vh;
+            width: 100vw;
+         }
+         /* Container for Three.js scene */
+         #threejs-container {
+            position: block;
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+      <!-- Load Three.js and dat.GUI -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"></script>
+   </head>
+   <body>
+      <div id="threejs-container"></div>
+      <script type="module">
+         // ---------------------------------------------
+         // Creating a dashed line using LineDashedMaterial
+         // ---------------------------------------------
+
+         // GUI for interactive controls
+         const gui = new dat.GUI()
+
+         // Window sizes
+         let width = window.innerWidth
+         let height = window.innerHeight
+
+         // Scene setup with dark background
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color(0x262626)
+
+         // Camera setup
+         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
+         camera.position.set(0, 0, 50)
+         camera.lookAt(0, 0, 0)
+
+         // Camera controls in GUI
+         const camFolder = gui.addFolder('Camera')
+         camFolder.add(camera.position, 'z', 10, 100)
+         camFolder.open()
+
+         // ---------------------------------------------
+         // Define line points
+         // ---------------------------------------------
+         const points = []
+         points.push(new THREE.Vector3(-10, 0, 0))   // Point 1
+         points.push(new THREE.Vector3(0, -20, 0))   // Point 2
+         points.push(new THREE.Vector3(10, 0, 0))    // Point 3
+
+         // GUI folders to move each point interactively
+         const folders = [gui.addFolder('Point 1'), gui.addFolder('Point 2'), gui.addFolder('Point 3')]
+         folders.forEach((folder, i) => {
+            folder.add(points[i], 'x', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'y', -30, 30, 1).onChange(redraw)
+            folder.add(points[i], 'z', -30, 30, 1).onChange(redraw)
+            folder.open()
+         })
+
+         // Geometry built from points
+         const geometry = new THREE.BufferGeometry().setFromPoints(points)
+
+         // Dashed line material
+         const material = new THREE.LineDashedMaterial({
+            color: 0xffffff,   // white
+            linewidth: 2,      // line thickness (may not work in all browsers)
+            scale: 1,          // scale factor
+            dashSize: 3,       // length of dashes
+            gapSize: 2         // space between dashes
+         })
+
+         // Create line and compute dashed distances
+         const line = new THREE.Line(geometry, material)
+         line.computeLineDistances() // required for dashed lines to appear
+         line.position.set(0, 10, 0) // move line upward
+         scene.add(line)
+
+         // Function to update line when points are changed
+         function redraw() {
+            let newGeometry = new THREE.BufferGeometry().setFromPoints(points)
+            line.geometry.dispose() // clean up old geometry
+            line.geometry = newGeometry
+            line.computeLineDistances() // recompute for dashed effect
+         }
+
+         // ---------------------------------------------
+         // Responsiveness on window resize
+         // ---------------------------------------------
+         window.addEventListener('resize', () => {
+            width = window.innerWidth
+            height = window.innerHeight
+            camera.aspect = width / height
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera)
+         })
+
+         // ---------------------------------------------
+         // Renderer setup
+         // ---------------------------------------------
+         const renderer = new THREE.WebGL1Renderer()
+         renderer.setSize(width, height)
+         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+         // ---------------------------------------------
+         // Animation loop
+         // ---------------------------------------------
+         function animate() {
+            requestAnimationFrame(animate)
+            renderer.render(scene, camera)
+         }
+
+         // ---------------------------------------------
+         // Add renderer to DOM and start rendering
+         // ---------------------------------------------
+         const container = document.querySelector('#threejs-container')
+         container.append(renderer.domElement)
+         renderer.render(scene, camera)
+         animate()
+      </script>
+   </body>
+</html>
