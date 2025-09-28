@@ -2,7 +2,7 @@
 
 import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
 import { STLLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/STLLoader.js';
-import { ColladaLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/ColladaLoader.js';
+//import { ColladaLoader } from 'https://unpkg.com/three@0.150.1/examples/jsm/loaders/ColladaLoader.js';
 //import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 //import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
 import { URDFRobot, URDFJoint, URDFLink, URDFCollider, URDFVisual, URDFMimicJoint } from './URDFClasses.js';
@@ -645,10 +645,10 @@ class URDFLoader {
                 done(mesh);
             });
 
-        } else if (/\.dae$/i.test(path)) {
+       /* } else if (/\.dae$/i.test(path)) {
 
             const loader = new ColladaLoader(manager);
-            loader.load(path, dae => done(dae.scene));
+            loader.load(path, dae => done(dae.scene));*/
 
         } else {
 
