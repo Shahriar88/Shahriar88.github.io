@@ -1,5 +1,5 @@
-/* https://github.com/gkjohnson/urdf-loaders/blob/master/javascript/src/URDFLoader.js */
-import { Euler, Object3D, Vector3, Quaternion, Matrix4 } from 'three';
+/* https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js */
+import { Euler, Object3D, Vector3, Quaternion, Matrix4 } from './three.module.js';
 
 const _tempAxis = new Vector3();
 const _tempEuler = new Euler();
