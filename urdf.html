@@ -2,62 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>URDF Test</title>
+  <title>URDF Viewer</title>
   <style>
-    body { margin: 0; }
-    canvas { display: block; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    #container { width: 100%; height: 70vh; }
+    #panel { padding:12px; box-shadow: 0 6px 24px rgba(0,0,0,.08); margin:12px; border-radius:12px; }
+    textarea { width:100%; height:180px; font-family:monospace; }
+    button { margin-right:8px; padding:6px 10px; border-radius:8px; }
   </style>
 </head>
 <body>
 
-//<script src="./js_urdf/URDFLoader.js"></script>
-<script type="module">
-  import * as THREE from "/js_urdf/three.module.js";
-  import { OrbitControls } from "/js_urdf/OrbitControls.js";
-  import URDFLoader from "/js_urdf/URDFLoader.js";
-  
-  
+  <div id="panel">
+    <h2 style="margin:0 0 8px">URDF Viewer</h2>
+    <div><b>Robot's URDF</b></div>
+    <textarea id="robottext" placeholder="Your URDF will be loaded here…"></textarea><br>
+    <button type="button" id="loadbutton">Load robot URDF</button>
+  </div>
 
-  // Scene setup
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
+  <!-- Three.js canvas host that scene.js expects -->
+  <div id="container"></div>
 
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.01, 100);
-  camera.position.set(2, 2, 3);
+  <!-- ====== JS dependencies (use your /js_urdf/ copies) ====== -->
+  <script src="/js_urdf/three.min.js"></script>
+  <script src="/js_urdf/jquery-3.7.1.min.js"></script>
+  <script src="/js_urdf/jquery.xml2json.js"></script>
+  <script src="/js_urdf/underscore.js"></script>
+  <script src="/js_urdf/backbone.js"></script>
+  <script src="/js_urdf/modelrobot.js"></script>
+  <script src="/js_urdf/parserobot.js"></script>
+  <script src="/js_urdf/scene.js"></script>
+  <script src="/js_urdf/animate.js"></script>
+  <script src="/js_urdf/TrackballControls.js"></script>
 
-  const renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  <!-- ====== Auto-load your URDF and trigger the site’s loader ====== -->
+  <script>
+    // 1) fetch your URDF as text and put it into the textarea
+    fetch('assets/robot.urdf', { cache: 'no-store' })
+      .then(r => {
+        if (!r.ok) throw new Error('Could not fetch assets/robot.urdf');
+        return r.text();
+      })
+      .then(txt => {
+        document.getElementById('robottext').value = txt;
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-
-  // Lighting
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(5, 5, 5);
-  scene.add(dirLight);
-
-  // URDF Loader
-  const loader = new URDFLoader();
-  loader.packages = { '': 'js_urdf/' }; // maps package:// URIs
-  loader.load('js_urdf/robot.urdf', robot => {
-    scene.add(robot);
-    console.log("Loaded robot:", robot);
-  });
-
-  // Handle resize
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  // Animation loop
-  function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-  }
-  animate();
-</script>
+        // 2) click the same button the app expects (modelrobot.js/parserobot.js wire to #loadbutton)
+        document.getElementById('loadbutton').click();
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Failed to load assets/robot.urdf — check the file path and commit.');
+      });
+  </script>
 </body>
 </html>
