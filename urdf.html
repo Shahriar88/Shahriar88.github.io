@@ -4,7 +4,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Three.js â Resizing browser</title>
+      <title>Three.js - Position GUI</title>
       <style>
          * {
             margin: 0;
@@ -30,11 +30,12 @@
    <body>
       <div id="threejs-container"></div>
       <script type="module">
-         // Adding responsiveness for Three.js
+         // Adding UI to debug and experimenting different values
+         // UI
+         const gui = new dat.GUI()
          // sizes
          let width = window.innerWidth
          let height = window.innerHeight
-         const gui = new dat.GUI()
          // scene
          const scene = new THREE.Scene()
          scene.background = new THREE.Color(0x262626)
@@ -47,8 +48,12 @@
             color: 0xffffff,
             wireframe: true
          })
+         gui.add(material, 'wireframe')
          const cube = new THREE.Mesh(geometry, material)
          scene.add(cube)
+         gui.add(cube.position, 'x')
+         gui.add(cube.position, 'y')
+         gui.add(cube.position, 'z')
          // responsiveness
          window.addEventListener('resize', () => {
             width = window.innerWidth
@@ -68,7 +73,7 @@
             cube.rotation.x += 0.005
             cube.rotation.y += 0.01
             renderer.render(scene, camera)
-          }
+         }
          // rendering the scene
          const container = document.querySelector('#threejs-container')
          container.append(renderer.domElement)
