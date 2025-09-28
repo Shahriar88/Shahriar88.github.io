@@ -39,6 +39,9 @@
     import { createJointSliders } from './urdf_js/urdf_joint_sliders.js';
     import { OrbitControls } from './urdf_js/OrbitControls.js';
 
+    // --- Config: change these to set the initial placement ---
+    const INITIAL_POS = { x: -0.31, y: -0.09, z: -0.58 };
+
     // Scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xeeeeee);
@@ -149,6 +152,8 @@
     window.moveRobotTo = (x, y, z) => {
       if (!robot) return;
       robot.position.set(x, y, z);
+    // Set initial placement BEFORE syncing HUD (so sliders match).
+      robot.position.set(INITIAL_POS.x, INITIAL_POS.y, INITIAL_POS.z); // WHY: defines start XYZ
       syncHUDFromRobot();
     };
   </script>
