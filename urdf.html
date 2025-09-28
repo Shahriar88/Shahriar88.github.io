@@ -38,9 +38,9 @@
   scene.add(dirLight);
 
   // URDF Loader
-  const loader = new URDFLoader();
-  loader.packages = { '': 'js_urdf/' }; // maps package:// URIs
-  loader.load('js_urdf/robot.urdf', robot => {
+  const loader2 = new URDFLoader();
+  loader2.packages = { '': 'js_urdf/' }; // maps package:// URIs
+  loader2.load('js_urdf/robot.urdf', robot => {
     scene.add(robot);
     console.log("Loaded robot:", robot);
   });
