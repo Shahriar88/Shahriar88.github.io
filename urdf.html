@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Three.js — Spinning Cube</title>
+  <title>Three.js — Cube + Line</title>
 
-  <!-- Import map: ONLY JSON goes here -->
+  <!-- Import map for three.js -->
   <script type="importmap">
   {
     "imports": {
@@ -19,8 +19,6 @@
   </style>
 </head>
 <body>
-
-<!-- Your module code goes in a separate script -->
 <script type="module">
   import * as THREE from "three";
 
@@ -28,24 +26,37 @@
   const height = window.innerHeight;
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-  camera.position.z = 1;
+  const camera = new THREE.PerspectiveCamera(45, width / height, 1, 500);
+  camera.position.set(0, 0, 100);
+  camera.lookAt(0, 0, 0);
 
   // Scene
   const scene = new THREE.Scene();
 
-  // Mesh
-  const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-  const material = new THREE.MeshNormalMaterial();
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  // Cube
+  const cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+  const cubeMaterial = new THREE.MeshNormalMaterial();
+  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+  cube.position.set(0, -10, 0); // move it a little down
+  scene.add(cube);
+
+  // Line
+  const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+  const points = [
+    new THREE.Vector3(-10, 0, 0),
+    new THREE.Vector3(0, 10, 0),
+    new THREE.Vector3(10, 0, 0)
+  ];
+  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(lineGeometry, lineMaterial);
+  scene.add(line);
 
   // Renderer
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
 
-  // Resize handling (optional but recommended)
+  // Resize handling
   window.addEventListener("resize", () => {
     const w = window.innerWidth, h = window.innerHeight;
     camera.aspect = w / h;
@@ -53,10 +64,10 @@
     renderer.setSize(w, h);
   });
 
-  // Animate
+  // Animation
   function animate(time) {
-    mesh.rotation.x = time / 2000;
-    mesh.rotation.y = time / 1000;
+    cube.rotation.x = time / 2000;
+    cube.rotation.y = time / 1000;
     renderer.render(scene, camera);
   }
   renderer.setAnimationLoop(animate);
