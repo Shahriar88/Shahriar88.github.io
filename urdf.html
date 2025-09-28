@@ -10,12 +10,12 @@
 </head>
 <body>
 
-<script src="./js_urdf/URDFLoader.js"></script>
+//<script src="./js_urdf/URDFLoader.js"></script>
 <script type="module">
   import * as THREE from "/js_urdf/three.module.js";
   import { OrbitControls } from "/js_urdf/OrbitControls.js";
-  /*import URDFLoader from "/js_urdf/URDFLoader.js";*/
-  // URDFLoader is now on the global scope
+  import URDFLoader from "/js_urdf/URDFLoader.js";
+  
   
 
   // Scene setup
@@ -38,9 +38,9 @@
   scene.add(dirLight);
 
   // URDF Loader
-  const loader2 = new URDFLoader();
-  loader2.packages = { '': 'js_urdf/' }; // maps package:// URIs
-  loader2.load('js_urdf/robot.urdf', robot => {
+  const loader = new URDFLoader();
+  loader.packages = { '': 'js_urdf/' }; // maps package:// URIs
+  loader.load('js_urdf/robot.urdf', robot => {
     scene.add(robot);
     console.log("Loaded robot:", robot);
   });
