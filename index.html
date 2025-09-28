@@ -183,11 +183,72 @@
         </iframe>
       </section>
       <!-- Tip: use class="col-span-2 row-span-2" if you also want full width -->
-    </div>
+
+
+      
+      <!-- File: index.html — inside .grid, same width as other cards -->
+      <section id="pypi">
+        <h2>Python Packages (PyPI)</h2>
+      
+        <h3 style="margin:0 0 6px">
+          <a href="https://pypi.org/project/pixhawkcontroller/" target="_blank" rel="noopener">pixhawkcontroller</a>
+          <span class="muted" style="font-weight:normal"> · v0.0.1 · GPL-3.0-or-later</span>
+        </h3>
+      
+        <p class="muted" style="margin-top:-2px">
+          Utilities for connecting to Pixhawk/ArduPilot via <code>pymavlink</code>: serial/UDP/TCP, quick RC/servo control, telemetry snapshot, mode switching, buzzer tunes.
+        </p>
+      
+        <strong>Install</strong>
+        <pre style="margin:6px 0; padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px"><code>pip install pixhawkcontroller</code></pre>
+      
+        <strong>Quick start</strong>
+        <pre style="margin:6px 0; padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px"><code>from pixhawkcontroller import FlightControllerInterface, TonesQb
+      
+      fc = FlightControllerInterface()
+      fc.connect()
+      fc.print_info()
+      fc.set_servo(9, 1500)
+      fc.play_tune(TonesQb.twinkle_little_star)
+      fc.close()</code></pre>
+      
+        <div class="links" style="gap:8px; margin-top:6px">
+          <a href="https://pypi.org/project/pixhawkcontroller/" target="_blank" rel="noopener">PyPI</a>
+          <a href="https://github.com/Shahriar88/pixhawkcontroller" target="_blank" rel="noopener">Source</a>
+          <a href="https://pypi.org/project/pixhawkcontroller/#project-description" target="_blank" rel="noopener">Docs</a>
+        </div>
+      </section>
 
 
 
-      <!-- YouTube video)  section class="col-span-2"----------------------------------------------------------------------->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+      <!-- YouTube video)  section class="col-span-2"----------------------------------------------------------------------------------------->
       <!-- ✅ SAME WIDTH AS OTHERS (half-width on desktop, full on mobile) -->
       <section>
         <h2>Demo Video</h2>
