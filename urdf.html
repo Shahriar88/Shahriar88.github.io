@@ -4,7 +4,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Three.js - Line basic</title>
+      <title>Three.js - Dashed line</title>
       <style>
          * {
             margin: 0;
@@ -30,8 +30,7 @@
    <body>
       <div id="threejs-container"></div>
       <script type="module">
-         // Creating a line using LineBasicMaterial
-
+         // Creating dashed line using LineDashedMaterial
          // GUI
          const gui = new dat.GUI()
          // sizes
@@ -60,13 +59,18 @@
             folder.open()
          })
          const geometry = new THREE.BufferGeometry().setFromPoints(points)
-         const material = new THREE.LineBasicMaterial({
+            const material = new THREE.LineDashedMaterial({
             color: 0xffffff,
-            linewidth: 2
+            linewidth: 2,
+            scale: 1,
+            dashSize: 3,
+            gapSize: 2
          })
          const line = new THREE.Line(geometry, material)
+         line.computeLineDistances()
          line.position.set(0, 10, 0)
          scene.add(line)
+         console.log(line)
          function redraw() {
             let newGeometry = new THREE.BufferGeometry().setFromPoints(points)
             line.geometry.dispose()
