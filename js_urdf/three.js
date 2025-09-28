@@ -1,5 +1,3 @@
-/* https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js */
-
 console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation' );
 /**
  * @license

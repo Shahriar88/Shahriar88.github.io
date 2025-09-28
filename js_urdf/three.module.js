@@ -2,7 +2,6 @@
  * @license
  * Copyright 2010-2023 Three.js Authors
  * SPDX-License-Identifier: MIT
-* https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js
  */
 const REVISION = '159';
 

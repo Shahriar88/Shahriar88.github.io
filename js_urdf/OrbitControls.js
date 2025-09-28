@@ -1,4 +1,3 @@
-/* https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js */
 import {
 	EventDispatcher,
 	MOUSE,
@@ -10,7 +9,7 @@ import {
 	Plane,
 	Ray,
 	MathUtils
-} from './three.js';
+} from 'three';
 
 // OrbitControls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
