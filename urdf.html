@@ -9,6 +9,7 @@
     import * as THREE from 'https://unpkg.com/three@0.150.1/build/three.module.js';
     //import { LoadingManager } from 'https://unpkg.com/three@0.150.1/build/three.module.js';
     import URDFLoader from './urdf_js/URDFLoader.js';
+    import { createJointSliders } from './urdf_js/urdf_joint_sliders.js';
 
     // ...init three.js scene...
     import { OrbitControls } from './urdf_js/OrbitControls.js';
@@ -80,6 +81,7 @@
       'assets/robot2.urdf',
       robot => {
         scene.add(robot);
+        createJointSliders(robot); // 🎉 Create sliders!
       },
       undefined,
       error => {
