@@ -1,22 +1,62 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>URDF Viewer</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.159.0/build/three.module.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.159.0/examples/jsm/controls/OrbitControls.js";
+    import URDFLoader from "https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js";
 
-import { LoadingManager } from 'three';
-import URDFLoader from 'urdf-loader';
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f0f0);
 
-// ...init three.js scene...
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.01, 100);
+    camera.position.set(2, 2, 3);
 
-const manager = new LoadingManager();
-const loader = new URDFLoader( manager );
-loader.packages = {
-    packageName : './package/dir/'            // The equivalent of a (list of) ROS package(s):// directory
-};
-loader.load(
-  'assets/robot.URDF',                    // The path to the URDF within the package OR absolute
-  robot => {
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    // The robot is loaded!
-    scene.add( robot );
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0.5, 0);
+    controls.update();
 
-  }
-);
-</script>
+    // Lighting
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.0));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
+
+    // URDF Loader
+    const loader = new URDFLoader();
+    loader.packages = { '': 'assets/' }; // maps package:// URIs to ./assets/
+
+    loader.load('assets/robot.urdf', robot => {
+      scene.add(robot);
+      console.log("Robot loaded:", robot);
+    });
+
+    // Resize handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
