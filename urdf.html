@@ -9,10 +9,14 @@
   </style>
 </head>
 <body>
+
+<script src="/js_urdf/URDFLoader.js"></script>
 <script type="module">
   import * as THREE from "/js_urdf/three.module.js";
   import { OrbitControls } from "/js_urdf/OrbitControls.js";
-  import URDFLoader from "/js_urdf/URDFLoader.js";
+  /*import URDFLoader from "/js_urdf/URDFLoader.js";*/
+  // URDFLoader is now on the global scope
+  const loader = new URDFLoader();
 
   // Scene setup
   const scene = new THREE.Scene();
