@@ -35,8 +35,8 @@
 
   // URDF Loader
   const loader = new URDFLoader();
-  loader.packages = { '': 'assets/' }; // maps package:// URIs
-  loader.load('assets/robot.urdf', robot => {
+  loader.packages = { '': 'js_urdf/' }; // maps package:// URIs
+  loader.load('js_urdf/robot.urdf', robot => {
     scene.add(robot);
     console.log("Loaded robot:", robot);
   });
