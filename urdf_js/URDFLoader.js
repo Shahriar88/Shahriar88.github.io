@@ -657,4 +657,3 @@ class URDFLoader {
     }
 
 };
-</script>
