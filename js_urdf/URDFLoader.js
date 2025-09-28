@@ -1,6 +1,6 @@
 /* https://unpkg.com/urdf-loader@0.10.3/src/URDFLoader.js */
 
-import * as THREE from './three.js';
+import * as THREE from './three.module.js';
 /*import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'; */
 import { URDFRobot, URDFJoint, URDFLink, URDFCollider, URDFVisual, URDFMimicJoint } from './URDFClasses.js';
@@ -663,5 +663,6 @@ class URDFLoader {
     }
 
 };
+
 
 
