@@ -1,0 +1,573 @@
+<!--  
+http://www.mymodelrobot.appspot.com/5629499534213120
+https://www.youtube.com/watch?v=CwdbsvcpOHM&ab_channel=ArticulatedRobotics
+http://library.isr.ist.utl.pt/docs/roswiki/xacro.html#Example
+http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model
+https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors
+
+
+-->
+
+<robot name="pycobot">
+
+	<!-- * * * material * * * -->
+	
+  	<!-- * * * blue * * * -->
+	<material name="color1_blue">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+
+	<material name="color2_rotate">
+        <color rgba="0.7 0.7 0.7 0.5"/>
+    </material>
+
+	<material name="color3">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+	
+  	<!-- * * * red * * * -->
+	<material name="color4_red">
+        <color rgba="0.4 0.4 0.4 1.0"/>
+    </material>
+	<!-- * * * green * * * -->
+	<material name="color5_green">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+	
+
+	<material name="color6">
+        <color rgba="0.7 0.7 0.7 0.5"/>
+    </material>
+  
+ 	<material name="color_black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+
+	<!-- * * * Link Definitions * * * -->
+ 	<link name="l_1">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.065" length="0.10"/>
+			</geometry>
+			<material name="color4_red">
+	     	</material>
+		</visual>	
+        
+    <!-- <<<<<<<<<<<<<<* * * Adding collision * * *>>>>>>>>>>>>>>>>>>> -->    
+        <collision>
+          <origin xyz="0 0 0.025" rpy="0 0 0"/>        
+          <geometry>
+            <cylinder radius="0.07" length="0.05"/>
+          </geometry>
+        </collision>
+        
+	</link>
+ 	
+    
+    <!--joint-->
+ 	<link name="l_1_2">
+		<visual>
+		    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        
+    <!-- <<<<<<<<<<<<<<* * * Adding inertia * * *>>>>>>>>>>>>>>>>>>> -->           
+        <inertial>
+          <mass value="0.2"/>
+          <origin xyz="0 0 0.025" rpy="0 0 0"/>  <!-- center of mass -->
+          <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+        </inertial>
+        
+        <collision>
+		    <cylinder radius="0.03" length="0.01"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+        </collision>
+
+
+	</link>
+    
+    
+    <link name="l_2">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.1"/>
+			</geometry>
+			<material name="color5_green">
+	     	</material>
+		</visual>	
+	</link>
+    
+ 	<!--joint-->
+    <link name="l_2_3">
+		<visual>
+		    <origin xyz="0 0 0.03" rpy="0  0 0 "/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        <collision>
+		    <cylinder radius="0.03" length="0.01"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+        </collision>  
+    </link>
+    
+    
+    <link name="l_3">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+			<material name="color1_blue">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+        </collision>  
+        
+	</link>
+    
+    
+    
+    
+ 	<link name="l_4">
+		<visual>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+			<material name="color3">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+        </collision>
+        
+	</link>
+    
+    
+    <link name="l_5">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+			<material name="color1_blue">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    <!--joint-->
+ 	<link name="l_5_6">
+		<visual>
+		    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        <collision>
+		    <cylinder radius="0.03" length="0.01"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+
+        </collision>
+	</link>
+    
+    
+    
+    
+ 	<link name="l_6">
+		<visual>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+			<material name="color3">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    <!--**************************** Repeat*************************-->
+    
+    <!--joint-->
+ 	<link name="l_6_7">
+		<visual>
+		    <origin xyz="0 0 0.03" rpy="0  0 0 "/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.03" rpy="0  0 0 "/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    <link name="l_7">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+			<material name="color1_blue">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    
+    
+ 	<link name="l_8">
+		<visual>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.05"/>
+			</geometry>
+			<material name="color3">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+        </collision>  
+	</link>
+    
+    
+    <link name="l_9">
+		<visual>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+			<material name="color1_blue">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.03"/>
+			</geometry>
+        </collision>  
+        
+	</link>
+    
+    
+    <!--joint-->
+ 	<link name="l_9_10">
+		<visual>
+		    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    
+    
+ 	<link name="l_10">
+		<visual>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.05"/>
+			</geometry>
+			<material name="color3">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.075" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.25"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    
+    <!-- Last-->
+    <!--joint-->
+ 	<link name="l_10_11">
+		<visual>
+		    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+			<material name="color2_rotate">
+	     	</material>
+		</visual>	
+        <collision>
+		    <cylinder radius="0.03" length="0.01"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.01"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    <link name="l_11">
+		<visual>
+		    <origin xyz="0 0 -0.002" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.10"/>
+			</geometry>
+			<material name="color5_green">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 -0.002" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.03" length="0.10"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    <link name="l_12">
+		<visual>
+		    <origin xyz="0 0 0.03" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.025" length="0.03"/>
+			</geometry>
+			<material name="color4_red">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.03" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.025" length="0.03"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    
+    <link name="black_mark">
+		<visual>
+		    <origin xyz="0 0 0.0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.005" length="0.002"/>
+			</geometry>
+			<material name="color_black">
+	     	</material>
+		</visual>	
+        <collision>
+		    <origin xyz="0 0 0.03" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.025" length="0.03"/>
+			</geometry>
+        </collision>
+	</link>
+    
+    	
+	<!-- * * * ********************Joint Definitions * * * ***********-->
+
+    
+
+ 	<joint name="js_1_2" type="revolute">
+    	<parent link="l_1"/>
+    	<child link="l_1_2"/>
+    	<origin xyz="0 0 0.08" rpy="0 0 0"/> <!-- rpy helps initial rotation -->
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 1"/> <!-- axis of rotation of own axis -->
+        <dynamics damping="1.0" friction="0.0001"/>
+	</joint>
+    
+    
+	<joint name="s_1_2" type="fixed">
+    	<parent link="l_1_2"/>
+    	<child link="l_2"/>
+    	<origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <dynamics damping="1.0" friction="0.0001"/>
+	</joint>
+
+    
+ 	<joint name="js_2_3" type="revolute">
+    	<parent link="l_2"/>
+    	<child link="l_2_3"/>
+      <!-- * * * +z=joint up* * * -->
+    	<origin xyz="0 0 0.08" rpy="0 1.57 0"/> <!-- Positioned at 90 degree=1.57 radian -->
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 1"/>  <!-- axis of rotation of own axis -->
+        <dynamics damping="0.0" friction="0.0"/>
+	</joint>
+    
+    
+	<joint name="s_2_3" type="fixed">
+    	<parent link="l_2_3"/>
+    	<child link="l_3"/>
+    	<origin xyz="0 0 0" rpy="0 0 0"/>
+	</joint>
+    
+
+
+    
+	<joint name="j_3_4" type="fixed">
+    	<parent link="l_3"/>
+    	<child link="l_4"/>
+      <!-- * * * -x=yellow up, +z= distance between yellow and blue * * * -->
+    	<origin xyz="-0.0250 0 0.085" rpy="0 -1.57 0"/>
+	</joint>
+    
+    <joint name="j_4_5" type="fixed">
+    	<parent link="l_4"/>
+    	<child link="l_5"/>
+      <!-- * * *  +x=close, +z=blue up * * * -->
+    	<origin xyz="0.01 0 0.170" rpy="0 -1.57 0"/>
+	</joint>
+    
+    
+    
+    
+ 	<joint name="js_5_6" type="revolute">
+    	<parent link="l_5"/>
+    	<child link="l_5_6"/>
+    	<origin xyz="0 0 0.04" rpy="0 0 0"/>
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 -1"/>
+	</joint>
+    
+	<joint name="s_5_6" type="fixed">
+    	<parent link="l_5_6"/>
+    	<child link="l_6"/>
+      <!-- * * * x=yellow up, +z= distance between yellow and blue * * * -->
+    	<origin xyz="0.0250 0 0.06" rpy="0 1.57 0"/>
+	</joint>
+	
+    <!--**************************** Repeat*************************-->
+
+
+ 	<joint name="js_6_7" type="revolute">
+    	<parent link="l_6"/>
+    	<child link="l_6_7"/>
+    	<origin xyz="0 0 0.175" rpy="0 1.57 0"/>
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 1"/>
+	</joint>
+    
+    
+	<joint name="s_6_7" type="fixed">
+    	<parent link="l_6_7"/>
+    	<child link="l_7"/>
+    	<origin xyz="0 0 0" rpy="0 0 0"/>
+	</joint>
+    
+
+
+    
+	<joint name="j_7_8" type="fixed">
+    	<parent link="l_7"/>
+    	<child link="l_8"/>
+    	<origin xyz="0.07 0 0.085" rpy="0 -1.57 0"/>
+	</joint>
+    
+    <joint name="j_8_9" type="fixed">
+    	<parent link="l_8"/>
+    	<child link="l_9"/>
+    	<origin xyz="0.0 0 0.065" rpy="0 0 0"/>
+	</joint>
+    
+    
+    
+    
+ 	<joint name="js_9_10" type="revolute">
+    	<parent link="l_9"/>
+    	<child link="l_9_10"/>
+    	<origin xyz="0 0 0.04" rpy="0 0 1.57"/>
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 1"/>
+	</joint>
+    
+	<joint name="s_9_10" type="fixed">
+    	<parent link="l_9_10"/>
+    	<child link="l_10"/>
+    	<origin xyz="0 0 -0.05" rpy="0 0 0"/>
+	</joint>
+    
+    
+    <!-- Last -->
+    
+ 	<joint name="s_10_10_11" type="fixed">
+    	<parent link="l_10"/>
+    	<child link="l_10_11"/>
+    	<origin xyz="0 0 0.050" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+	</joint>
+    
+	<joint name="s_10_11" type="fixed">
+    	<parent link="l_10_11"/>
+    	<child link="l_11"/>
+    	<origin xyz="0 0 0.06" rpy="0 1.57 0"/>
+	</joint>
+    
+
+
+ 	<joint name="js_11_12" type="revolute">
+    	<parent link="l_11"/>
+    	<child link="l_12"/>
+    	<origin xyz="0 0 0.03" rpy="0 0 0"/>
+       	<limit lower="-3.1416" upper="3.1416" effort="10" velocity="3"/>
+        <axis xyz="0 0 1"/>
+	</joint>
+
+ 	<joint name="j_12_black_mark" type="fixed">
+    	<parent link="l_12"/>
+    	<child link="black_mark"/>
+    	<origin xyz="0 0.02 0.05" rpy="0 0 0"/>
+	</joint>
+    
+</robot>
