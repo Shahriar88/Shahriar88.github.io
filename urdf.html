@@ -17,9 +17,9 @@
     //const manager = new LoadingManager();
     const manager = new THREE.LoadingManager();
     const loader = new URDFLoader(manager);
-    loader.packages = {
+    /*loader.packages = {
       packageName: './package/dir/' // The equivalent of a (list of) ROS package(s):// directory
-    };
+    };*/
     loader.load(
       'assets/robot.urdf', // The path to the URDF within the package OR absolute
       robot => {
