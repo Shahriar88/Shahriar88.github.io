@@ -242,12 +242,15 @@
         <details style="margin-top:10px">
           <summary><strong>Notes on the model</strong></summary>
           <ul style="margin:6px 0 0 18px">
-            <li>Implemented a Mask R-CNN pipeline and trained end-to-end with a <em>ResNet-13</em> backbone.</li>
-            <li>Custom transforms, class-balanced sampling, and early stopping on validation mask AP.</li>
-            <li>Metrics reported on a held-out split; qualitative results shown in the image above.</li>
+            <li><strong>From-scratch Mask R-CNN</strong> trained on the Kaggle Fruits dataset (apple/banana/orange), images resized to <code>200×200</code>.</li>
+            <li><strong>Custom backbones:</strong> simple CNN, ResNet-style, <em>ResNet-13</em>, and <em>ResNet-13 (Hadamard residual)</em>; selectable via <code>CustomBackbone_list_n</code> with <code>backbone.out_channels</code> set (e.g., 2048).</li>
+            <li><strong>RPN/ROI Align:</strong> custom <code>AnchorGenerator</code>, <code>MultiScaleRoIAlign</code>, and tunable IoU/NMS thresholds for RPN and ROI heads.</li>
+            <li><strong>Data loader:</strong> reads preprocessed <code>.pth</code> tensors (<code>images</code>, <code>bbox</code>, <code>labels</code>, optional <code>masks</code>), supports <em>rectangle</em> and <em>polygon</em> masks, plus Gaussian noise augmentation.</li>
+            <li><strong>Training:</strong> Adam (+L2 weight decay) with TensorBoard logging of train/val loss, IoU, and label accuracy; optional early stop on validation accuracy; rolling epoch checkpoints and separate “best model” saves.</li>
+            <li><strong>Resume/eval:</strong> load from checkpoint or full model; evaluation pipeline applies NMS and renders side-by-side ground truth vs predictions with mask overlays and confidence filtering.</li>
+            <li>Practical bits: handles the KMP duplicate lib issue when needed; easy toggles for running epochs, visualizations, dataset eval, and noise on val/test.</li>
           </ul>
         </details>
-      </section>
       <!-- /Mask R-CNN section ------------------------------------------------------->
 
 
