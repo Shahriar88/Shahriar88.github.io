@@ -210,99 +210,45 @@
 
 
 
-      <!-- Mask R-CNN — Fruits (new section) ------------------------------------------------------------------>
+    
+      <!-- Mask R-CNN — Fruits (new section) ----------------------------------------->
       <section id="maskrcnn">
-        <h2>Mask R-CNN — Fruits Instance Segmentation</h2>
-        <p>
-          I trained a <strong>Mask R-CNN</strong> model from scratch on the Kaggle Fruits dataset.
-          Below is a collage of predictions (blue boxes/masks) vs ground truth (red boxes).  
-          The model was implemented in Python and trained end-to-end (data split: train/val/test).
+        <h2>Mask R-CNN — Fruits (from scratch)</h2>
+        <p class="muted" style="margin-top:-4px">
+          Instance segmentation on the Kaggle Fruits dataset using a Mask R-CNN I trained from scratch.<br/>
+          <strong>Backbone:</strong> ResNet-13 · <strong>Dataset:</strong> Kaggle Fruits · <strong>Task:</strong> apple/banana/orange instance masks
         </p>
       
-        <!-- Preview image (click opens full-size in a new tab) -->
-        <a href="assets/Mask-RCNN.png" target="_blank" rel="noopener"
-           title="Open full-size Mask R-CNN collage in a new tab">
-          <picture>
-            <!-- optional: provide a WebP if you export one later -->
-            <!-- <source srcset="assets/Mask-RCNN.webp" type="image/webp"> -->
-            <img
-              src="assets/Mask-RCNN.png"
-              alt="Mask R-CNN fruit detection results: apples, bananas, oranges—blue predicted masks and boxes vs red ground truth"
-              loading="lazy"
-              style="max-height: 900px; width: 100%; height: auto; border:1px solid var(--border); border-radius:12px; background:var(--bg);" />
-          </picture>
-        </a>
+        <!-- Thumbnail (zoomed-out) -->
+        <figure class="thumb-card" role="group" aria-label="Mask R-CNN qualitative results">
+          <button class="thumb" type="button"
+                  aria-label="Open full-size Mask R-CNN results image"
+                  data-full="assets/Mask-RCNN.png">
+            <!-- Use <img> for lazy loading + good alt; CSS crops it to a small area -->
+            <img src="assets/Mask-RCNN.png" alt="Collage of Mask R-CNN predictions vs ground truth on fruits"
+                 loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="muted">Click to view full image.</figcaption>
+        </figure>
       
-        <!-- Tiny spec block (edit numbers as you like) -->
-        <ul class="muted" style="margin-top:10px; line-height:1.6">
-          <li>Backbone: ResNet-50 + FPN · Framework: PyTorch/Detectron2 (or Keras/TF if you used that)</li>
-          <li>Training: ~X epochs · Batch size: Y · Image size: Z</li>
-          <li>Split: Train / Val / Test = 2×2 / 2×2 / 2×2 image grids for reporting</li>
-        </ul>
-      
-        <!-- Optional expandable details -->
-        <details style="margin-top:8px">
-          <summary><strong>Notes & Setup</strong></summary>
-          <div style="margin-top:8px">
-            <ul>
-              <li>Augmentations: horizontal flip, random crop/resize.</li>
-              <li>Losses: classification, bbox regression, and mask loss (per ROI).</li>
-              <li>Post-processing: NMS on detections; per-instance binary masks.</li>
-            </ul>
+        <!-- Lightbox -->
+        <dialog id="imgDialog" class="img-dialog">
+          <div class="img-dialog__chrome">
+            <button class="close" aria-label="Close full image">&times;</button>
           </div>
+          <img id="dialogImg" src="" alt="Full-size Mask R-CNN fruits results" />
+        </dialog>
+      
+        <details style="margin-top:10px">
+          <summary><strong>Notes on the model</strong></summary>
+          <ul style="margin:6px 0 0 18px">
+            <li>Implemented a Mask R-CNN pipeline and trained end-to-end with a <em>ResNet-13</em> backbone.</li>
+            <li>Custom transforms, class-balanced sampling, and early stopping on validation mask AP.</li>
+            <li>Metrics reported on a held-out split; qualitative results shown in the image above.</li>
+          </ul>
         </details>
-      
-        <!-- Links row (replace with your real notebook/repo/model if desired) -->
-        <div class="links" style="gap:8px; margin-top:10px">
-          <a href="assets/Mask-RCNN.png" download>Download Result Image</a>
-          <!-- Optional placeholders: -->
-          <!-- <a href="https://github.com/Shahriar88/your-maskrcnn-repo" target="_blank" rel="noopener">Source Code</a> -->
-          <!-- <a href="https://www.kaggle.com/engrmdshahriarforhad" target="_blank" rel="noopener">Kaggle Notebook</a> -->
-        </div>
       </section>
-
-      <!-- Mask R-CNN — Fruits (new section) ------------------------------------------------------------------>
-
-
-
-
-
-      
-
-      
-
-      <!-- Spans two rows on desktop ------------------------------------------------------------------------------------->
-      <section class="col-span-2">
-        <h2>URDF Robot Demo</h2>
-        <p>A live 3D viewer of one of my robot model (URDF). You can rotate, zoom, and move the joints.</p>
-        <iframe
-          src="urdf.html"
-          width="100%"
-          height="600"
-          title="URDF Robot Demo"
-          style="border:1px solid #ccc; border-radius:12px;">
-          Your browser does not support iframes.
-        </iframe>
-      </section>
-      <!-- Tip: use class="col-span-2 row-span-2" if you also want full width ---------------------------------------------------------->
-
-
-      
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
+      <!-- /Mask R-CNN section ------------------------------------------------------->
 
 
 
@@ -355,6 +301,24 @@
 
 
 
+
+      <!-- Spans two rows on desktop ------------------------------------------------------------------------------------->
+      <section class="col-span-2">
+        <h2>URDF Robot Demo</h2>
+        <p>A live 3D viewer of one of my robot model (URDF). You can rotate, zoom, and move the joints.</p>
+        <iframe
+          src="urdf.html"
+          width="100%"
+          height="600"
+          title="URDF Robot Demo"
+          style="border:1px solid #ccc; border-radius:12px;">
+          Your browser does not support iframes.
+        </iframe>
+      </section>
+      <!-- Tip: use class="col-span-2 row-span-2" if you also want full width ---------------------------------------------------------->
+
+
+      
 
 
 
