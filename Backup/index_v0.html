@@ -1,60 +1,57 @@
+<!-- File: index.html (cleaned & adjusted) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Md Shahriar Forhad — Portfolio</title>
-<link rel="stylesheet" href="styles.css" />
-<meta name="description" content="Portfolio and resume of Md Shahriar Forhad. Robotics, Machine Learning, and Manufacturing." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
-<script type="application/ld+json">
-  
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Md Shahriar Forhad",
-  "email": [
-    "mailto:mdshahriar.forhad01@utrgv.edu",
-    "mailto:shahriar.forhad.eee@gmail.com"
-  ],
-  "url": "https://Shahriar88.github.io",
-  "sameAs": [
-    "https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en",
-    "http://www.linkedin.com/in/md-shahriar-forhad-11b91813b",
-    "https://github.com/Shahriar88",
-    "https://www.kaggle.com/engrmdshahriarforhad",
-    "https://www.credly.com/users/md-shahriar-forhad",
-    "https://rpubs.com/Shahriar/Cyclistic_Bikers_2022"
-  ],
-  "jobTitle": "Graduate Research Assistant",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Edinburg",
-    "addressRegion": "TX",
-    "addressCountry": "US"
-  },
-  "alumniOf": [
-    {
-      "@type": "CollegeOrUniversity",
-      "name": "UTRGV"
-    },
-    {
-      "@type": "CollegeOrUniversity",
-      "name": "CUET"
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Md Shahriar Forhad — Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Portfolio and resume of Md Shahriar Forhad. Robotics, Machine Learning, and Manufacturing." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <!-- Name row + 3D box tweaks -->
+  <style>
+    .name-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+    .mini3d{
+      width:160px;height:96px; /* smaller so it never collides with the line below */
+      border:1px solid var(--border);border-radius:12px;background:transparent;overflow:hidden;position:relative;
     }
-  ]
-}
+    .mini3d canvas{width:100% !important;height:100% !important;display:block;pointer-events:none} /* never block links */
+    @media (max-width:520px){ .mini3d{ width:140px;height:84px } }
+  </style>
 
-
-</script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Md Shahriar Forhad",
+    "email":["mailto:mdshahriar.forhad01@utrgv.edu","mailto:shahriar.forhad.eee@gmail.com"],
+    "url":"https://Shahriar88.github.io",
+    "sameAs":[
+      "https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en",
+      "http://www.linkedin.com/in/md-shahriar-forhad-11b91813b",
+      "https://github.com/Shahriar88",
+      "https://www.kaggle.com/engrmdshahriarforhad",
+      "https://www.credly.com/users/md-shahriar-forhad",
+      "https://rpubs.com/Shahriar/Cyclistic_Bikers_2022"
+    ],
+    "jobTitle":"Graduate Research Assistant",
+    "address":{"@type":"PostalAddress","addressLocality":"Edinburg","addressRegion":"TX","addressCountry":"US"},
+    "alumniOf":[{"@type":"CollegeOrUniversity","name":"UTRGV"},{"@type":"CollegeOrUniversity","name":"CUET"}]
+  }
+  </script>
 </head>
 <body>
   <div class="container">
     <header class="header">
       <div class="avatar">🤖</div>
       <div>
-        <h1>Md Shahriar Forhad</h1>
-        
+        <!-- name + tiny three.js box -->
+        <div class="name-row">
+          <h1>Md Shahriar Forhad</h1>
+          <div id="mini3d" class="mini3d" aria-label="Animated 3D cube"></div>
+        </div>
+
         <div class="subtitle">
           Edinburg, Texas, USA ·
           <a href="mailto:mdshahriar.forhad01@utrgv.edu">mdshahriar.forhad01@utrgv.edu</a> ·
@@ -64,51 +61,61 @@
 
         <div class="links">
           <a href="https://scholar.google.com/citations?user=k3703CoAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
-<a href="http://www.linkedin.com/in/md-shahriar-forhad-11b91813b" target="_blank" rel="noopener">LinkedIn</a>
-<a href="https://github.com/Shahriar88" target="_blank" rel="noopener">GitHub</a>
-<a href="https://www.kaggle.com/engrmdshahriarforhad" target="_blank" rel="noopener">Kaggle</a>
-<a href="https://www.credly.com/users/md-shahriar-forhad" target="_blank" rel="noopener">Credly</a>
-<a href="https://rpubs.com/Shahriar/Cyclistic_Bikers_2022" target="_blank" rel="noopener">RPubs</a>
+          <a href="http://www.linkedin.com/in/md-shahriar-forhad-11b91813b" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/Shahriar88" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.kaggle.com/engrmdshahriarforhad" target="_blank" rel="noopener">Kaggle</a>
+          <a href="https://www.credly.com/users/md-shahriar-forhad" target="_blank" rel="noopener">Credly</a>
+          <a href="https://rpubs.com/Shahriar/Cyclistic_Bikers_2022" target="_blank" rel="noopener">RPubs</a>
           <a href="assets/Shahriar_Resume.pdf" class="btn">Download Resume (PDF)</a>
         </div>
       </div>
     </header>
 
+    
+
+  <!-- Tiny three.js scene just for the header box -->
+  <script type="module" src="./urdf_js/box.js"></script>
+
+
+
+
+
+
+  <!-- Content --------------------------------------------------------->
+
     <div class="grid">
       <section>
         <h2>About</h2>
-        <p>PhD researcher focused on robotics, laser-based manufacturing, and applied machine learning. Experienced with PLC/industrial comms (Siemens & Profinet), multi‑kW laser systems, robotic calibration (ABB/KUKA), and end‑to‑end Python control of motion stages, galvo scanners, and laser processes.</p>
-        <p><strong>Interests:</strong> Machine Learning, Robotics, PLC, Cyber‑physical Systems, Power Systems, Automation</p>
-        
-        <!-- <p><strong>Certifications:</strong> Engineer in Training (Texas), Google Data Analytics Certificate (Capstone Projects 01 & 02)</p>
-        -->
+        <p>PhD researcher focused on robotics, laser-based manufacturing, and applied machine learning. Experienced with PLC/industrial comms (Siemens & Profinet), multi-kW laser systems, robotic calibration (ABB/KUKA), and end-to-end Python control of motion stages, galvo scanners, and laser processes.</p>
+        <p><strong>Interests:</strong> Machine Learning, Robotics, PLC, Cyber-physical Systems, Power Systems, Automation</p>
       </section>
-
 
       <section>
         <h2>Certifications</h2>
         <ul>
           <li>
-            <strong>Engineer-In-Training (EIT), Texas</strong> — 
+            <strong>Engineer-In-Training (EIT), Texas</strong> —
             <span class="muted">Issued 2025 · Expires 2033 · Certificate #84003</span>
           </li>
           <li>
-            <strong>Google Data Analytics Certificate</strong> — 
-            <span class="muted">Issued 2023 · 
+            <strong>Google Data Analytics Certificate</strong> —
+            <span class="muted">Issued 2023 ·
               <a href="https://www.credly.com/go/YJKdIaHD" target="_blank" rel="noopener">Verify</a>
             </span>
           </li>
         </ul>
       </section>
+      </div>  <!-- ✅ CLOSE .grid HERE -->
 
 
+    
 
-
-      
       <section>
         <h2>Education</h2>
         <ul>
-          <li><strong>PhD, Mathematics and Statistics (Interdisciplinary Applications), UTRGV</strong> — <span class='muted'>2023–present, CGPA 3.92</span></li><li><strong>MSc, Manufacturing Engineering, UTRGV</strong> — <span class='muted'>2021–2023, CGPA 3.90</span></li><li><strong>BSc, Electrical and Electronic Engineering, CUET</strong> — <span class='muted'>2008–2012</span></li>
+          <li><strong>PhD, Mathematics and Statistics (Interdisciplinary Applications), UTRGV</strong> — <span class="muted">2023–present, CGPA 3.92</span></li>
+          <li><strong>MSc, Manufacturing Engineering, UTRGV</strong> — <span class="muted">2021–2023, CGPA 3.90</span></li>
+          <li><strong>BSc, Electrical and Electronic Engineering, CUET</strong> — <span class="muted">2008–2012, CGPA 3.32</span></li>
         </ul>
       </section>
 
@@ -116,15 +123,20 @@
         <h2>Research Experience</h2>
         <ul>
           <li>Spectral Behavior of Fiber Bragg Gratings during Embedding in 3D-Printed Metal Tensile Coupons and Cyclic Loading</li>
-<li>Gaze Tracking Embedded Collaborative Robots for Automated Metrology and Reverse Engineering</li>
-<li>Direct Ink Writing Of In-Situ Shear Exfoliated Two-Dimensional Nanomaterial–Elastomeric Multifunctional Nanocomposite</li>
+          <li>Gaze Tracking Embedded Collaborative Robots for Automated Metrology and Reverse Engineering</li>
+          <li>Direct Ink Writing Of In-Situ Shear Exfoliated Two-Dimensional Nanomaterial–Elastomeric Multifunctional Nanocomposite</li>
         </ul>
       </section>
 
       <section>
         <h2>Skills</h2>
         <div>
-          <span class='badge'>Machine Learning (CNN/LSTM/Transformers, KNN)</span><span class='badge'>Robotics (ABB, KUKA), PLC (Siemens 1515SP), Profinet</span><span class='badge'>Laser Systems (1kW/8kW LaserLine), Femto-second coding</span><span class='badge'>Python (4yr), R (2yr), SAS; Web scraping; MySQL</span><span class='badge'>SolidWorks, Fusion 360, SIMIO, MATLAB</span><span class='badge'>Embedded: Raspberry Pi, Arduino; URDF; G-code; TCP/IP/Serial</span>
+          <span class="badge">Machine Learning (CNN/LSTM/Transformers, KNN)</span>
+          <span class="badge">Robotics (ABB, KUKA), PLC (Siemens 1515SP), Profinet</span>
+          <span class="badge">Laser Systems (1kW/8kW LaserLine), Femto-second coding</span>
+          <span class="badge">Python (4yr), R (2yr), SAS; Web scraping; MySQL</span>
+          <span class="badge">SolidWorks, Fusion 360, SIMIO, MATLAB</span>
+          <span class="badge">Embedded: Raspberry Pi, Arduino; URDF; G-code; TCP/IP/Serial</span>
         </div>
       </section>
 
@@ -132,38 +144,207 @@
         <h2>Publications & Preprints</h2>
         <ul>
           <li><a href="https://www.mdpi.com/1424-8220/24/12/3919" target="_blank" rel="noopener">Sensors 2024</a></li>
-<li><a href="https://www.sciencedirect.com/science/article/pii/S2213846324002669" target="_blank" rel="noopener">Additive Manufacturing Letters 2024</a></li>
-<li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5432932" target="_blank" rel="noopener">SSRN Working Paper</a></li>
+          <li><a href="https://www.sciencedirect.com/science/article/pii/S2213846324002669" target="_blank" rel="noopener">Additive Manufacturing Letters 2024</a></li>
+          <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5432932" target="_blank" rel="noopener">SSRN Working Paper</a></li>
         </ul>
       </section>
 
       <section>
         <h2>Experience</h2>
         <ul>
-          <li><strong>Graduate Research Assistant, UTRGV</strong> — <em>2021–2021; 2022; 2023–present</em><ul><li>Robotics & system integration; control with Raspberry Pi/Arduino</li>
-<li>Python control of galvo scanner & laser; stage control; G‑code generation</li>
-<li>Event demos; mentoring (IDREAM4D), DoD Summer Camp teaching</li></ul></li><li><strong>Graduate Teaching Assistant, UTRGV</strong> — <em>2022–2023</em><ul><li>Manufacturing Processes Lab (tensile, milling, metallurgy)</li>
-<li>Computer‑Aided Design (SolidWorks)</li></ul></li><li><strong>Assistant Manager, Petrobangla (Bangladesh Oil, Gas & Mineral Corp.)</strong> — <em>2014–2020</em><ul><li>Gas pricing (incl. RLNG mixes), national production & supply budgeting</li>
-<li>Briefings for parliament Q&A; oversight of sector companies</li></ul></li>
+          <li><strong>Graduate Research Assistant, UTRGV</strong> — <em>2021–2021; 2022; 2023–present</em>
+            <ul>
+              <li>Robotics & system integration; control with Raspberry Pi/Arduino</li>
+              <li>Python control of galvo scanner & laser; stage control; G-code generation</li>
+              <li>Event demos; mentoring (IDREAM4D), DoD Summer Camp teaching</li>
+            </ul>
+          </li>
+          <li><strong>Graduate Teaching Assistant, UTRGV</strong> — <em>2022–2023</em>
+            <ul>
+              <li>Manufacturing Processes Lab (tensile, milling, metallurgy)</li>
+              <li>Computer-Aided Design (SolidWorks)</li>
+            </ul>
+          </li>
+          <li><strong>Assistant Manager, Petrobangla (Bangladesh Oil, Gas & Mineral Corp.)</strong> — <em>2014–2020</em>
+            <ul>
+              <li>Gas pricing (incl. RLNG mixes), national production & supply budgeting</li>
+              <li>Briefings for parliament Q&A; oversight of sector companies</li>
+            </ul>
+          </li>
         </ul>
-      </section>
-
-
-      <section>
-  <h2>URDF Robot Demo</h2>
-  <p>A live 3D viewer of one of my robot model (URDF). You can rotate, zoom, and move the joints.</p>
-  <iframe src="urdf.html" width="100%" height="600" style="border:1px solid #ccc; border-radius:12px;">
-    Your browser does not support iframes.
-  </iframe>
       </section>
 
 
 
 
       
-    </div>
+      <!-- File: index.html — inside .grid, same width as other cards -->
+      <section id="pypi">
+        <h2>Python Packages (PyPI)</h2>
+      
+        <h3 style="margin:0 0 6px">
+          <a href="https://pypi.org/project/pixhawkcontroller/" target="_blank" rel="noopener">pixhawkcontroller</a>
+          <span class="muted" style="font-weight:normal"> · v0.0.1 · GPL-3.0-or-later</span>
+        </h3>
+      
+        <p class="muted" style="margin-top:-2px">
+          Utilities for connecting to Pixhawk/ArduPilot via <code>pymavlink</code>: serial/UDP/TCP, quick RC/servo control, telemetry snapshot, mode switching, buzzer tunes.
+        </p>
+      
+        <strong>Install</strong>
+        <pre style="margin:6px 0; padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px"><code>pip install pixhawkcontroller</code></pre>
+      
+        <strong>Quick start</strong>
+        <pre style="margin:6px 0; padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px"><code>from pixhawkcontroller import FlightControllerInterface, TonesQb
+      
+      fc = FlightControllerInterface()
+      fc.connect()
+      fc.print_info()
+      fc.set_servo(9, 1500)
+      fc.play_tune(TonesQb.twinkle_little_star)
+      fc.close()</code></pre>
+      
+        <div class="links" style="gap:8px; margin-top:6px">
+          <a href="https://pypi.org/project/pixhawkcontroller/" target="_blank" rel="noopener">PyPI</a>
+          <a href="https://github.com/Shahriar88/pixhawkcontroller" target="_blank" rel="noopener">Source</a>
+          <a href="https://pypi.org/project/pixhawkcontroller/#project-description" target="_blank" rel="noopener">Docs</a>
+        </div>
+      </section>
 
-    <p class="footer">© Md Shahriar Forhad. Built with GitHub Pages.</p>
+      
+
+
+
+    
+      <!-- Mask R-CNN — Fruits (new section) ----------------------------------------->
+      <section id="maskrcnn">
+        <h2>Mask R-CNN — Fruits (from scratch)</h2>
+        <p class="muted" style="margin-top:-4px">
+          Instance segmentation on the Kaggle Fruits dataset using a Mask R-CNN, I coded the model from scratch.<br/>
+          <strong>Backbone:</strong> ResNet-13 · <strong>Dataset:</strong> Kaggle Fruits · <strong>Task:</strong> apple/banana/orange instance masks
+        </p>
+      
+        <!-- Thumbnail (zoomed-out) -->
+        <figure class="thumb-card" role="group" aria-label="Mask R-CNN qualitative results">
+          <button class="thumb" type="button"
+                  aria-label="Open full-size Mask R-CNN results image"
+                  data-full="assets/Mask-RCNN.png">
+            <!-- Use <img> for lazy loading + good alt; CSS crops it to a small area -->
+            <img src="assets/Mask-RCNN.png" alt="Collage of Mask R-CNN predictions vs ground truth on fruits"
+                 loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="muted">Click to view full image.</figcaption>
+        </figure>
+      
+        <!-- Lightbox -->
+        <dialog id="imgDialog" class="img-dialog">
+          <div class="img-dialog__chrome">
+            <button class="close" aria-label="Close full image">&times;</button>
+          </div>
+          <img id="dialogImg" src="" alt="Full-size Mask R-CNN fruits results" />
+        </dialog>
+      
+        <details style="margin-top:10px">
+          <summary><strong>Notes on the model</strong></summary>
+          <ul style="margin:6px 0 0 18px">
+            
+          <li><strong>Built from scratch:</strong> Mask R-CNN trained on the Kaggle Fruits set (apple, banana, orange). I resize everything to <code>200×200</code> for speed.</li>
+          <li><strong>Backbones I tried:</strong> a small CNN, a ResNet-style net, <em>ResNet-13</em>, and a <em>ResNet-13 with Hadamard residuals</em>. You can switch with <code>CustomBackbone_list_n</code>; <code>backbone.out_channels</code> is set accordingly (e.g., 2048).</li>
+          <li><strong>Proposals & pooling:</strong> custom <code>AnchorGenerator</code> and <code>MultiScaleRoIAlign</code>, with tweakable IoU/NMS thresholds for both the RPN and ROI heads.</li>
+          <li><strong>Data pipeline:</strong> loads preprocessed <code>.pth</code> files (<code>images</code>, <code>bbox</code>, <code>labels</code>, optional <code>masks</code>). Works with rectangle or polygon masks and can add Gaussian noise during training.</li>
+          <li><strong>Training setup:</strong> Adam with L2 weight decay, TensorBoard charts (train/val loss, IoU, label accuracy), optional early-stop on val accuracy, rolling epoch checkpoints, plus a separate “best model” save.</li>
+          <li><strong>Resume & evaluate:</strong> can reload from a checkpoint or full model. The eval script runs NMS and shows ground truth vs. predictions side-by-side with mask overlays and confidence filtering.</li>
+
+          </ul>
+        </details>
+
+        
+      </section>
+      <!-- /Mask R-CNN section ------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<!-- YouTube video)  section class="col-span-2"---------------------------------------------------------------------------------------------------------------------------->
+      <!-- YouTube video)  section class="col-span-2"----------------------------------------------------------------------------------------->
+      <!-- ✅ SAME WIDTH AS OTHERS (half-width on desktop, full on mobile) -->
+      <section>
+        <h2>Demo Video - Laser Powder Bed Fusion (LPBF)</h2>
+        <p>Short demo of my Laser Powder Bed Fusion (LPBF) setup using a custom Python/pygame GUI to coordinate XYZ linear stages and a galvo scanner in real time.</p>
+      
+        <iframe
+          class="media-frame"
+          src="https://www.youtube-nocookie.com/embed/akCXCpGs03U?rel=0&modestbranding=1"
+          title="LPBF demo — synchronized linear stages and galvo"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </section>
+      
+      <!-- OPTIONAL: make LinkedIn card same width too -->
+      <section>
+        <h2>Defense Manufacturing Expo — UTRGV (2022)</h2>
+        <p>Lead-through teaching demo: I moved the robot by hand while the system recorded waypoints to a file, then replayed them automatically (including pick-and-place). Entire workflow in Python.</p>
+      
+        <iframe
+          class="media-frame"
+          src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:6920277162700775424?collapsed=1"
+          title="LinkedIn — Defense Manufacturing Expo 2022 post"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+      </section>
+
+
+
+
+
+
+
+      <!-- Spans two rows on desktop ------------------------------------------------------------------------------------->
+      <section class="col-span-2">
+        <h2>URDF Robot Demo</h2>
+        <p>A live 3D viewer of one of my robot model (URDF). You can rotate, zoom, and move the joints.</p>
+        <iframe
+          src="urdf.html"
+          width="100%"
+          height="600"
+          title="URDF Robot Demo"
+          style="border:1px solid #ccc; border-radius:12px;">
+          Your browser does not support iframes.
+        </iframe>
+      </section>
+      <!-- Tip: use class="col-span-2 row-span-2" if you also want full width ---------------------------------------------------------->
+
+
+      
+
+
+
+
+  
+<!-- End ----------------------------------------------------------------------->
+      
+      
+      
+      
+
+  <script src="assets/maskrcnn-lightbox.js" defer></script>
+  <p class="footer">© Md Shahriar Forhad. Built with GitHub Pages.</p>
   </div>
+
 </body>
 </html>
