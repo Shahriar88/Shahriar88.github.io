@@ -218,9 +218,9 @@
     
       <!-- Mask R-CNN — Fruits (new section) ----------------------------------------->
       <section id="maskrcnn">
-        <h2>Mask R-CNN — Fruits (from scratch)</h2>
+        <h2>Mask R-CNN — Fruits</h2>
         <p class="muted" style="margin-top:-4px">
-          Instance segmentation on the Kaggle Fruits dataset using a Mask R-CNN, I coded the model from scratch.<br/>
+          Instance segmentation on the Kaggle Fruits dataset using a Mask R-CNN, I coded the backbone from scratch.<br/>
           <strong>Backbone:</strong> ResNet-13 · <strong>Dataset:</strong> Kaggle Fruits · <strong>Task:</strong> apple/banana/orange instance masks
         </p>
       
@@ -248,7 +248,7 @@
           <summary><strong>Notes on the model</strong></summary>
           <ul style="margin:6px 0 0 18px">
             
-          <li><strong>Built from scratch:</strong> Mask R-CNN trained on the Kaggle Fruits set (apple, banana, orange). I resize everything to <code>200×200</code> for speed.</li>
+          <li><strong>Built step by step:</strong> Mask R-CNN trained on the Kaggle Fruits set (apple, banana, orange). I resize everything to <code>200×200</code> for speed.</li>
           <li><strong>Backbones I tried:</strong> a small CNN, a ResNet-style net, <em>ResNet-13</em>, and a <em>ResNet-13 with Hadamard residuals</em>. You can switch with <code>CustomBackbone_list_n</code>; <code>backbone.out_channels</code> is set accordingly (e.g., 2048).</li>
           <li><strong>Proposals & pooling:</strong> custom <code>AnchorGenerator</code> and <code>MultiScaleRoIAlign</code>, with tweakable IoU/NMS thresholds for both the RPN and ROI heads.</li>
           <li><strong>Data pipeline:</strong> loads preprocessed <code>.pth</code> files (<code>images</code>, <code>bbox</code>, <code>labels</code>, optional <code>masks</code>). Works with rectangle or polygon masks and can add Gaussian noise during training.</li>
